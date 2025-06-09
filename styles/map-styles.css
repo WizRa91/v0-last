@@ -1,0 +1,305 @@
+/* Leaflet Map Container */
+.leaflet-container {
+  background-color: rgba(181, 208, 216, 1) !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Custom Map Markers */
+.custom-marker-icon {
+  background: transparent;
+  border: none;
+}
+
+.marker-pin {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  background: #4a7a7a;
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -15px 0 0 -15px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.marker-pin::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  margin: 6px 0 0 6px;
+  background: #cdaf87;
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* Map Popups */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 8px 8px 16px rgba(140, 111, 90, 0.4), -8px -8px 16px rgba(248, 240, 227, 0.7);
+  width: 350px !important;
+  background: #f8f0e3;
+  padding: 0;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  width: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.leaflet-popup {
+  margin-bottom: 60px !important;
+  z-index: 1000 !important;
+  max-height: none !important;
+}
+
+.leaflet-popup-tip-container {
+  display: none;
+}
+
+.leaflet-popup-close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 1000;
+  background: rgba(248, 240, 227, 0.8) !important;
+  border-radius: 50%;
+  box-shadow: 3px 3px 5px rgba(140, 111, 90, 0.3), -3px -3px 5px rgba(248, 240, 227, 0.5);
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px !important;
+  color: #8c6f5a !important;
+  transition: all 0.3s ease;
+}
+
+.leaflet-popup-close-button:hover {
+  background: rgba(205, 175, 135, 0.8) !important;
+  transform: scale(1.1);
+}
+
+/* Site Popup Content - Image */
+.site-popup img {
+  /* Targets .site-popup-image */
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0; /* Match popup wrapper's top corners */
+  display: block; /* Ensure block display and remove potential bottom space */
+  border: none; /* Ensure no borders */
+}
+
+/* Site Popup Content - Text Alignment */
+.site-popup-content {
+  /* This div wraps title, blurb, footer in the JSX */
+  padding: 16px 20px 20px; /* More generous padding */
+}
+
+.site-popup h3 {
+  /* Site name */
+  font-size: 18px;
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  color: #8c6f5a;
+  margin: 0 0 8px 0; /* Adjusted for new padding model: only bottom margin */
+}
+
+.site-popup p {
+  /* Blurb */
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  color: #8c6f5a;
+  margin: 0 0 12px 0; /* Adjusted for new padding model: only bottom margin */
+}
+
+/* Site Popup Content - Footer */
+.site-popup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Aligns [Button] [Tag] group to the left */
+  gap: 12px; /* Space between button and tag */
+  /* Vertical space is handled by the blurb's margin-bottom */
+}
+
+.site-popup-button {
+  display: inline-block;
+  background-color: #4a7a7a;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 3px 3px 6px rgba(140, 111, 90, 0.3), -3px -3px 6px rgba(248, 240, 227, 0.5);
+  margin: 0; /* Remove original margins, rely on flex gap for spacing */
+}
+
+.site-popup-button:hover {
+  background-color: #8c6f5a;
+}
+
+.site-popup-tag {
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  color: #8c6f5a;
+}
+
+/* Dark mode adjustments */
+.dark .site-popup h3 {
+  color: #d9d9d9; /* Existing */
+}
+
+.dark .site-popup p {
+  color: #a1a1a1; /* Existing */
+}
+
+.dark .site-popup-button {
+  background-color: #6b7280; /* Existing */
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3), -3px -3px 6px rgba(42, 42, 42, 0.5); /* Existing */
+}
+
+.dark .site-popup-button:hover {
+  background-color: #5f9ea0; /* Existing */
+}
+
+.dark .site-popup-tag {
+  color: #a1a1a1; /* Match dark mode blurb color */
+}
+
+/* Map Controls */
+.leaflet-control-zoom {
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 5px 5px 10px rgba(140, 111, 90, 0.3), -5px -5px 10px rgba(248, 240, 227, 0.5) !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: #f8f0e3 !important;
+  color: #8c6f5a !important;
+  transition: all 0.3s ease;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #cdaf87 !important;
+}
+
+/* Dark Mode Styles */
+.dark .leaflet-popup-content-wrapper {
+  background: #2a2a2a;
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.4), -8px -8px 16px rgba(42, 42, 42, 0.7);
+}
+
+.dark .leaflet-popup-close-button {
+  background: rgba(42, 42, 42, 0.8) !important;
+  color: #d9d9d9 !important;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3), -3px -3px 5px rgba(42, 42, 42, 0.5);
+}
+
+.dark .leaflet-popup-close-button:hover {
+  background: rgba(107, 114, 128, 0.8) !important;
+}
+
+.dark .leaflet-control-zoom {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3), -5px -5px 10px rgba(42, 42, 42, 0.5) !important;
+}
+
+.dark .leaflet-control-zoom a {
+  background-color: #2a2a2a !important;
+  color: #d9d9d9 !important;
+}
+
+.dark .leaflet-control-zoom a:hover {
+  background-color: #3a3a3a !important;
+}
+
+.dark .site-popup h3 {
+  color: #d9d9d9;
+}
+
+.dark .site-popup p {
+  color: #a1a1a1;
+}
+
+.dark .site-popup-button {
+  background-color: #6b7280;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3), -3px -3px 6px rgba(42, 42, 42, 0.5);
+}
+
+.dark .site-popup-button:hover {
+  background-color: #5f9ea0;
+}
+
+.dark .site-popup-tag {
+  color: #a1a1a1; /* Match dark mode blurb color */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .leaflet-popup-content-wrapper {
+    width: 280px !important;
+  }
+
+  /* Map height on mobile */
+  .map-container {
+    min-height: 70vh;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Stack sidebar and map on very small screens */
+  .map-container {
+    min-height: 60vh;
+  }
+}
+
+/* Loading States */
+.loading-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(248, 240, 227, 0.5);
+}
+
+.dark .loading-container {
+  background-color: rgba(42, 42, 42, 0.5);
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 4px solid #4a7a7a;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.dark .loading-spinner {
+  border-color: #6b7280;
+  border-top-color: transparent;
+}
+
+.loading-text {
+  color: #8c6f5a;
+  font-family: "Montserrat", sans-serif;
+  margin-top: 8px;
+}
+
+.dark .loading-text {
+  color: #d9d9d9;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
