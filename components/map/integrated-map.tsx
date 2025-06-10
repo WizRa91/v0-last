@@ -19,7 +19,7 @@ const sitesData = [
     description: "An Incan citadel set high in the Andes Mountains in Peru.",
     media: [
       {
-        src: "/machu-picchu.png",
+        src: "/machu-picchu-peru.png",
         alt: "Machu Picchu",
         caption: "Machu Picchu, Peru",
         type: "image",
@@ -33,7 +33,7 @@ const sitesData = [
     description: "A complex of Mayan ruins on Mexico's Yucatán Peninsula.",
     media: [
       {
-        src: "/chichen-itza.png",
+        src: "/chichen-itza-mexico.png",
         alt: "Chichen Itza",
         caption: "Chichen Itza, Mexico",
         type: "image",
@@ -44,12 +44,12 @@ const sitesData = [
     slug: "colosseum",
     name: "Colosseum",
     location: { lat: 41.8902, lng: 12.4922 },
-    description: "An ancient amphitheater in the center of Rome, Italy.",
+    description: "An elliptical amphitheater in the center of the city of Rome, Italy.",
     media: [
       {
-        src: "/colosseum.png",
+        src: "/colosseum-italy.png",
         alt: "Colosseum",
-        caption: "Colosseum, Rome",
+        caption: "Colosseum, Italy",
         type: "image",
       },
     ],
@@ -58,10 +58,11 @@ const sitesData = [
     slug: "great-wall",
     name: "Great Wall of China",
     location: { lat: 40.4319, lng: 116.5704 },
-    description: "A series of fortifications made of stone, brick, tamped earth, wood, and other materials.",
+    description:
+      "A series of fortifications that were built across the historical northern borders of ancient Chinese states.",
     media: [
       {
-        src: "/great-wall-of-china.png",
+        src: "/great-wall-china.png",
         alt: "Great Wall of China",
         caption: "Great Wall of China",
         type: "image",
@@ -98,10 +99,10 @@ const sitesData = [
     slug: "taj-mahal",
     name: "Taj Mahal",
     location: { lat: 27.1751, lng: 78.0421 },
-    description: "An ivory-white marble mausoleum on the banks of the Yamuna river in Agra, India.",
+    description: "An ivory-white marble mausoleum on the southern bank of the river Yamuna in the Indian city of Agra.",
     media: [
       {
-        src: "/taj-mahal.png",
+        src: "/taj-mahal-india.png",
         alt: "Taj Mahal",
         caption: "Taj Mahal, India",
         type: "image",
@@ -115,7 +116,7 @@ const sitesData = [
     description: "An Art Deco statue of Jesus Christ in Rio de Janeiro, Brazil.",
     media: [
       {
-        src: "/christ-the-redeemer.png",
+        src: "/christ-the-redeemer-brazil.png",
         alt: "Christ the Redeemer",
         caption: "Christ the Redeemer, Brazil",
         type: "image",
