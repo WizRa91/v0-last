@@ -10,11 +10,11 @@ const rebuses: Rebus[] = [
   {
     id: "rebus-petra-1",
     siteId: "petra",
-    imageUrl: "/images/rebus-petra.png",
+    imageUrl: "/images/rebus-petra-new.png",
     answer: "The Nabataeans",
     hint: "An ancient Arab people who inhabited northern Arabia and the Southern Levant, and whose capital was Petra.",
   },
-  // Future rebuses can be added here
+  // Future rebuses for other sites can be added here
 ]
 
 export const getRebusForSite = (siteId: string): Rebus | null => {

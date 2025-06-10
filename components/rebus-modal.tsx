@@ -60,12 +60,12 @@ export function RebusModal({ isOpen, onClose, siteId, siteName }: RebusModalProp
           </DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <div className="relative w-full h-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow-inner">
+          <div className="relative w-full h-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow-inner flex justify-center">
             <Image
               src={rebus.imageUrl || "/placeholder.svg"}
               alt={`Rebus for ${siteName}`}
               width={400}
-              height={200}
+              height={150}
               className="rounded-md object-contain"
             />
           </div>
