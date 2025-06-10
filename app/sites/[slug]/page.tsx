@@ -68,17 +68,14 @@ export default function SitePage({ params }: { params: { slug: string } }) {
 
   if (!site) {
     return (
-      <div className="loading-container bg-cream-light dark:bg-dark-primary-bg min-h-screen flex flex-col items-center justify-center">
+      <div className="loading-container theme-bg min-h-screen flex flex-col items-center justify-center">
         <div className="loading-content text-center p-8">
-          <h1 className="text-6xl font-bold text-brown dark:text-dark-text-primary mb-4">404</h1>
-          <h2 className="text-2xl font-bold text-brown dark:text-dark-text-primary mb-4">Site Not Found</h2>
-          <p className="text-gray-600 dark:text-dark-text-secondary mb-8">
+          <h1 className="text-6xl font-bold theme-text mb-4">404</h1>
+          <h2 className="text-2xl font-bold theme-text mb-4">Site Not Found</h2>
+          <p className="theme-secondary-text mb-8">
             The ancient site you're looking for doesn't exist in our database.
           </p>
-          <Link
-            href="/map"
-            className="inline-flex items-center bg-teal hover:bg-teal-dark dark:bg-dark-accent dark:hover:bg-dark-hover-teal text-white dark:text-dark-text-primary px-6 py-3 rounded-lg font-medium transition-colors"
-          >
+          <Link href="/map" className="inline-flex items-center theme-button px-6 py-3 rounded-lg font-medium">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Map
           </Link>
@@ -103,9 +100,12 @@ export default function SitePage({ params }: { params: { slug: string } }) {
   const pageUrl = typeof window !== "undefined" ? window.location.href : ""
 
   return (
-    <div className="blog-post-container bg-cream-light dark:bg-dark-primary-bg text-brown dark:text-dark-text-primary">
+    <div className="blog-post-container theme-bg theme-text">
       <div className="blog-post-content">
-        <Link href="/map" className="back-button">
+        <Link
+          href="/map"
+          className="back-button theme-secondary-bg theme-text border theme-border hover:bg-[var(--custom-accent)] hover:text-[#f5f1e8] dark:hover:bg-[var(--custom-hover)]"
+        >
           {" "}
           {/* Assuming .back-button handles its own dark styles or is fine */}
           <ArrowLeft className="w-4 h-4" />
@@ -138,7 +138,7 @@ export default function SitePage({ params }: { params: { slug: string } }) {
         <div className="content-layout grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
           <div className="main-content lg:col-span-2 space-y-8">
             <div className="about-section prose dark:prose-invert max-w-none dark:text-dark-text-secondary">
-              <h2 className="text-brown dark:text-dark-text-primary">About {site.name}</h2>
+              <h2 className="theme-text">About {site.name}</h2>
               <div dangerouslySetInnerHTML={{ __html: site.fullDescription.replace(/\n/g, "<br />") }} />
             </div>
             <QuizWidget siteName={site.name} siteId={site.slug} />
@@ -152,13 +152,13 @@ export default function SitePage({ params }: { params: { slug: string } }) {
               </div>
             )}
 
-            <div className="p-6 rounded-lg shadow-lg bg-white dark:bg-dark-secondary-bg">
-              <h3 className="text-xl font-bold text-brown dark:text-dark-text-primary mb-3 font-['Cinzel'] flex items-center">
-                <Layers size={20} className="mr-2 text-teal dark:text-dark-hover-teal" />
+            <div className="p-6 rounded-lg shadow-lg theme-secondary-bg">
+              <h3 className="text-xl font-bold theme-text mb-3 font-['Cinzel'] flex items-center">
+                <Layers size={20} className="mr-2 theme-accent-text" />
                 Site Category
               </h3>
-              <p className="text-lg font-semibold text-teal dark:text-dark-hover-teal mb-1">{site.primaryCategory}</p>
-              <p className="text-sm text-gray-600 dark:text-dark-text-secondary mb-4">
+              <p className="text-lg font-semibold theme-accent-text mb-1">{site.primaryCategory}</p>
+              <p className="text-sm theme-secondary-text mb-4">
                 This site is primarily classified under {site.primaryCategory}. Explore more sites in this category or
                 browse all classifications.
               </p>
@@ -168,44 +168,44 @@ export default function SitePage({ params }: { params: { slug: string } }) {
                     `/map?category=${encodeURIComponent(site.primaryCategory.toLowerCase().replace(/\s+/g, "_"))}`,
                   )
                 }
-                className="w-full mb-2 bg-teal hover:bg-teal-dark dark:bg-dark-accent dark:hover:bg-dark-hover-teal text-white dark:text-dark-text-primary"
+                className="w-full mb-2 theme-button"
               >
                 Explore {site.primaryCategory}
               </Button>
               <Button
                 onClick={() => router.push("/map?show_categories=true")}
                 variant="outline"
-                className="w-full text-teal border-teal hover:bg-teal hover:text-white dark:text-dark-accent dark:border-dark-accent dark:hover:bg-dark-hover-teal dark:hover:text-dark-text-primary"
+                className="w-full text-[var(--custom-accent)] border-[var(--custom-accent)] hover:bg-[var(--custom-accent)] hover:text-[#f5f1e8] dark:text-[var(--custom-accent)] dark:border-[var(--custom-accent)] dark:hover:bg-[var(--custom-hover)] dark:hover:text-[var(--custom-text)]"
               >
                 View All Categories
               </Button>
             </div>
 
-            <div className="p-6 rounded-lg shadow-lg bg-white dark:bg-dark-secondary-bg mt-6">
-              <h3 className="text-xl font-bold text-brown dark:text-dark-text-primary mb-4 font-['Cinzel']">
-                Site Information
-              </h3>
-              <div className="space-y-4 text-sm text-gray-700 dark:text-dark-text-secondary">
+            <div className="p-6 rounded-lg shadow-lg theme-secondary-bg mt-6">
+              <h3 className="text-xl font-bold theme-text mb-4 font-['Cinzel']">Site Information</h3>
+              <div className="space-y-4 text-sm theme-secondary-text">
                 <div>
-                  <p className="font-medium text-brown dark:text-dark-text-primary">Location</p>
+                  <p className="font-medium theme-text">Location</p>
                   <p>
                     {site.specificLocation}, {site.country}
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium text-brown dark:text-dark-text-primary">Time Period</p>
+                  <p className="font-medium theme-text">Time Period</p>
                   <p>{site.period}</p>
                 </div>
                 <div>
-                  <p className="font-medium text-brown dark:text-dark-text-primary">Type</p>
+                  <p className="font-medium theme-text">Type</p>
                   <p>{site.type}</p>
                 </div>
                 {site.unesco && (
-                  <div className="bg-teal-light/20 dark:bg-dark-hover-teal/20 p-3 rounded-lg">
-                    <p className="font-medium text-teal-dark dark:text-dark-hover-teal">UNESCO World Heritage Site</p>
+                  <div className="bg-[var(--custom-accent)]/20 p-3 rounded-lg">
+                    <p className="font-medium text-[var(--custom-accent)] dark:text-[var(--custom-hover)]">
+                      UNESCO World Heritage Site
+                    </p>
                   </div>
                 )}
-                <div className="pt-2 border-t border-cream-dark dark:border-dark-border">
+                <div className="pt-2 border-t theme-border">
                   {site.visitors && (
                     <p>
                       <strong>Annual Visitors:</strong> {site.visitors}

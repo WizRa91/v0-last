@@ -1,29 +1,26 @@
-"use client"
+import type React from "react"
+import { Badge } from "./ui/badge"
 
 interface TagSectionProps {
   tags: string[]
-  onTagClick?: (tag: string) => void
 }
 
-export const TagSection = ({ tags, onTagClick }: TagSectionProps) => {
-  const handleTagClick = (tag: string) => {
-    if (onTagClick) onTagClick(tag)
-  }
-
+const TagSection: React.FC<TagSectionProps> = ({ tags }) => {
   return (
-    <div className="bg-cream-dark/50 dark:bg-dark-secondary-bg p-8 rounded-2xl shadow-lg mt-8">
-      <h2 className="text-3xl font-bold mb-5 text-brown dark:text-dark-text-primary">Related Tags</h2>
-      <div className="flex flex-wrap gap-3">
-        {tags.map((tag, index) => (
-          <div
-            key={index}
-            onClick={() => handleTagClick(tag)}
-            className="bg-brown dark:bg-dark-accent px-4 py-2 rounded-full text-cream-light dark:text-dark-text-primary text-sm uppercase tracking-wider transition-all duration-300 cursor-pointer hover:bg-teal dark:hover:bg-dark-hover-teal hover:-translate-y-[1px] shadow-md active:bg-teal-dark dark:active:bg-dark-hover-teal/80"
+    <div className="tag-section py-4 px-6 rounded-lg theme-secondary-bg">
+      <h2 className="text-xl font-semibold mb-4 theme-text">Tags</h2>
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <Badge
+            key={tag}
+            className="bg-[var(--custom-accent)]/20 text-[var(--custom-accent)] hover:bg-[var(--custom-accent)]/30 dark:bg-dark-accent/50 dark:text-dark-text-secondary dark:hover:bg-dark-accent/70"
           >
             {tag}
-          </div>
+          </Badge>
         ))}
       </div>
     </div>
   )
 }
+
+export default TagSection

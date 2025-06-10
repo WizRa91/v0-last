@@ -1,90 +1,83 @@
-"use client"
-
-import { Facebook, Instagram, Twitter, Send } from "lucide-react"
-import { toast } from "sonner"
+import type React from "react"
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  RedditShareButton,
+  EmailShareButton,
+} from "react-share"
+import { FacebookIcon, TwitterIcon, LinkedinIcon, RedditIcon, EmailIcon } from "react-share"
 
 interface SocialShareButtonsProps {
   url: string
   title: string
+  body?: string
 }
 
-export const SocialShareButtons = ({ url, title }: SocialShareButtonsProps) => {
-  const encodedUrl = encodeURIComponent(url)
-  const encodedTitle = encodeURIComponent(title)
-
-  const shareToFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, "_blank")
-    toast.success("Opening Facebook share dialog")
-  }
-
-  const shareToTwitter = () => {
-    window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`, "_blank")
-    toast.success("Opening X (Twitter) share dialog")
-  }
-
-  const shareToTelegram = () => {
-    window.open(`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`, "_blank")
-    toast.success("Opening Telegram share dialog")
-  }
-
-  const shareToInstagram = () => {
-    navigator.clipboard.writeText(url)
-    toast.success("URL copied to clipboard! Open Instagram to share manually.")
-  }
-
+const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ url, title, body }) => {
   return (
-    <div className="flex items-center space-x-3">
-      <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
-        onClick={shareToFacebook}
-      >
-        <Facebook
-          size={20}
-          className="text-brown dark:text-dark-text-secondary group-hover:text-white dark:group-hover:text-dark-text-primary transition-colors"
-        />
-        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white dark:bg-dark-primary-bg dark:text-dark-text-primary text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Share on Facebook
-        </div>
-      </div>
+    <div className="flex space-x-2">
+      <FacebookShareButton url={url} quote={title}>
+        <button className="rounded-full w-10 h-10 theme-secondary-bg hover:bg-[var(--custom-accent)]/20 text-[var(--custom-accent)] dark:bg-gray-700 dark:hover:bg-gray-600">
+          <FacebookIcon
+            size={32}
+            round
+            iconFillColor="currentColor"
+            logoFillColor="currentColor"
+            className="w-5 h-5 theme-accent-text"
+          />
+        </button>
+      </FacebookShareButton>
 
-      <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
-        onClick={shareToInstagram}
-      >
-        <Instagram
-          size={20}
-          className="text-brown dark:text-dark-text-secondary group-hover:text-white dark:group-hover:text-dark-text-primary transition-colors"
-        />
-        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white dark:bg-dark-primary-bg dark:text-dark-text-primary text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Share on Instagram
-        </div>
-      </div>
+      <TwitterShareButton url={url} title={title}>
+        <button className="rounded-full w-10 h-10 theme-secondary-bg hover:bg-[var(--custom-accent)]/20 text-[var(--custom-accent)] dark:bg-gray-700 dark:hover:bg-gray-600">
+          <TwitterIcon
+            size={32}
+            round
+            iconFillColor="currentColor"
+            logoFillColor="currentColor"
+            className="w-5 h-5 theme-accent-text"
+          />
+        </button>
+      </TwitterShareButton>
 
-      <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
-        onClick={shareToTelegram}
-      >
-        <Send
-          size={20}
-          className="text-brown dark:text-dark-text-secondary group-hover:text-white dark:group-hover:text-dark-text-primary transition-colors"
-        />
-        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white dark:bg-dark-primary-bg dark:text-dark-text-primary text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Share on Telegram
-        </div>
-      </div>
+      <LinkedinShareButton url={url} title={title} summary={body} source={url}>
+        <button className="rounded-full w-10 h-10 theme-secondary-bg hover:bg-[var(--custom-accent)]/20 text-[var(--custom-accent)] dark:bg-gray-700 dark:hover:bg-gray-600">
+          <LinkedinIcon
+            size={32}
+            round
+            iconFillColor="currentColor"
+            logoFillColor="currentColor"
+            className="w-5 h-5 theme-accent-text"
+          />
+        </button>
+      </LinkedinShareButton>
 
-      <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
-        onClick={shareToTwitter}
-      >
-        <Twitter
-          size={20}
-          className="text-brown dark:text-dark-text-secondary group-hover:text-white dark:group-hover:text-dark-text-primary transition-colors"
-        />
-        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white dark:bg-dark-primary-bg dark:text-dark-text-primary text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Share on X (Twitter)
-        </div>
-      </div>
+      <RedditShareButton url={url} title={title}>
+        <button className="rounded-full w-10 h-10 theme-secondary-bg hover:bg-[var(--custom-accent)]/20 text-[var(--custom-accent)] dark:bg-gray-700 dark:hover:bg-gray-600">
+          <RedditIcon
+            size={32}
+            round
+            iconFillColor="currentColor"
+            logoFillColor="currentColor"
+            className="w-5 h-5 theme-accent-text"
+          />
+        </button>
+      </RedditShareButton>
+
+      <EmailShareButton url={url} subject={title} body={body}>
+        <button className="rounded-full w-10 h-10 theme-secondary-bg hover:bg-[var(--custom-accent)]/20 text-[var(--custom-accent)] dark:bg-gray-700 dark:hover:bg-gray-600">
+          <EmailIcon
+            size={32}
+            round
+            iconFillColor="currentColor"
+            logoFillColor="currentColor"
+            className="w-5 h-5 theme-accent-text"
+          />
+        </button>
+      </EmailShareButton>
     </div>
   )
 }
+
+export default SocialShareButtons

@@ -1,54 +1,48 @@
-"use client"
-
-import Link from "next/link"
-import { Globe, MapPin } from "lucide-react"
+import { Breadcrumbs, CardsInGrid, Container, Hero, Pagination } from "@/components"
+import { ChevronRightIcon } from "@heroicons/react/20/solid"
 
 interface SiteTaxonomyProps {
-  siteName: string
-  country: string
-  primaryCategory: string
-  specificLocation: string
-  addonName?: string
+  title: string
+  description: string
+  items: {
+    title: string
+    href: string
+    description: string
+    imageSrc: string
+    imageAlt: string
+  }[]
+  breadcrumbs: {
+    label: string
+    href: string
+  }[]
+  currentPage: number
+  totalPages: number
 }
 
-export const SiteTaxonomy = ({
-  siteName,
-  country,
-  primaryCategory,
-  specificLocation,
-  addonName,
-}: SiteTaxonomyProps) => {
-  const displaySiteName = addonName ? `${siteName} - ${addonName}` : siteName
-
+export function SiteTaxonomy({ title, description, items, breadcrumbs, currentPage, totalPages }: SiteTaxonomyProps) {
   return (
-    <div className="mb-6 text-brown dark:text-dark-text-primary">
-      <div className="mb-4 flex items-center text-sm flex-wrap">
-        <Link
-          href="/map"
-          className="inline-flex items-center gap-1.5 text-brown dark:text-dark-text-secondary hover:text-teal dark:hover:text-dark-hover-teal transition-colors"
-        >
-          <Globe size={16} strokeWidth={2} aria-hidden="true" />
-          ALL
-        </Link>
-        <span className="mx-2 text-gray-400 dark:text-dark-text-secondary/70">/</span>
-        <Link
-          href={`/map?country=${country.toLowerCase()}`}
-          className="inline-flex items-center gap-1.5 text-brown dark:text-dark-text-secondary hover:text-teal dark:hover:text-dark-hover-teal transition-colors"
-        >
-          <MapPin size={16} strokeWidth={2} aria-hidden="true" />
-          {country.toUpperCase()}
-        </Link>
-        <span className="mx-2 text-gray-400 dark:text-dark-text-secondary/70">/</span>
-        <span className="text-brown dark:text-dark-text-primary font-medium">{displaySiteName.toUpperCase()}</span>
-      </div>
+    <div>
+      <Breadcrumbs
+        items={[...breadcrumbs, { label: title, href: "#", current: true }]}
+        className="mb-8"
+        separatorIcon={<ChevronRightIcon className="h-5 w-5 theme-secondary-text" />}
+        linkClassName="theme-secondary-text hover:theme-text"
+        activeClassName="font-medium theme-text"
+      />
 
-      <div className="text-gray-600 dark:text-dark-text-secondary text-sm mb-2 font-['Montserrat']">
-        {primaryCategory} • {specificLocation}
-      </div>
+      <Hero>
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:mx-0">
+            <h1 className="site-title text-3xl font-bold tracking-tight theme-text sm:text-4xl">{title}</h1>
+            <p className="site-category-location mt-2 text-lg leading-8 theme-secondary-text">{description}</p>
+          </div>
+        </div>
+      </Hero>
 
-      <h1 className="text-4xl md:text-5xl font-bold text-brown dark:text-dark-text-primary font-['Cinzel']">
-        {displaySiteName}
-      </h1>
+      <Container>
+        <CardsInGrid items={items} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} />
+      </Container>
     </div>
   )
 }
