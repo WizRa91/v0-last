@@ -98,9 +98,9 @@ export function Footer() {
               <p>Research Inquiries: research@archaicknowledge.com</p>
             </address>
           </div>
-          <div className="relative md:col-start-4 flex flex-col items-end">
-            <h3 className="mb-4 text-lg font-semibold theme-text self-start">Follow Us</h3>
-            <div className="mb-6 flex space-x-4 self-end">
+          <div className="relative md:col-start-4 flex flex-col items-start">
+            <h3 className="mb-4 text-lg font-semibold theme-text">Follow Us</h3>
+            <div className="mb-6 flex space-x-4">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -154,7 +154,7 @@ export function Footer() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <div className="flex items-center space-x-2 self-end">
+            <div className="flex items-center space-x-2 ml-auto">
               <Sun className="h-4 w-4 theme-icon" />
               <Switch id="dark-mode" checked={isDarkMode} onCheckedChange={setIsDarkMode} />
               <Moon className="h-4 w-4 theme-icon" />
