@@ -1,6 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { ancientSites } from "@/components/map/site-data"
+import { sitesData } from "@/components/map/site-data"
 import { SiteList } from "@/components/my-atlas/site-list"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
@@ -27,7 +27,7 @@ export default async function BookmarksPage() {
   }
 
   const siteIds = interactions.map((i) => i.site_id)
-  const userSites = ancientSites.filter((site) => siteIds.includes(site.id))
+  const userSites = sitesData.filter((site) => siteIds.includes(site.slug))
 
   return (
     <div className="min-h-[calc(100vh-4rem)] theme-primary-bg py-8 px-4 md:px-8">
