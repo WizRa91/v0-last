@@ -1,44 +1,22 @@
-export interface RebusQuestion {
+export interface Rebus {
   id: string
+  siteId: string
   imageUrl: string
   answer: string
   hint?: string
 }
 
-export interface SiteRebus {
-  siteId: string
-  rebuses: RebusQuestion[]
-}
-
-export const siteRebuses: SiteRebus[] = [
+const rebuses: Rebus[] = [
   {
+    id: "rebus-petra-1",
     siteId: "petra",
-    rebuses: [
-      {
-        id: "petra-rebus-1",
-        imageUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-IQtYHBfpkJTJ5HZPRaqMPVEzA9afpv.png",
-        answer: "the nabataeans",
-        hint: "Ancient civilization that built Petra",
-      },
-    ],
+    imageUrl: "/images/rebus-petra.png",
+    answer: "The Nabataeans",
+    hint: "An ancient Arab people who inhabited northern Arabia and the Southern Levant, and whose capital was Petra.",
   },
-  {
-    siteId: "machu-picchu",
-    rebuses: [
-      {
-        id: "machu-picchu-rebus-1",
-        imageUrl: "/placeholder.svg?height=300&width=500",
-        answer: "inca empire",
-        hint: "Ancient civilization that built Machu Picchu",
-      },
-    ],
-  },
+  // Future rebuses can be added here
 ]
 
-export function getRebusForSite(siteId: string): RebusQuestion | null {
-  const siteRebus = siteRebuses.find((sr) => sr.siteId === siteId)
-  if (!siteRebus || siteRebus.rebuses.length === 0) return null
-
-  // For now, just return the first rebus for the site
-  return siteRebus.rebuses[0]
+export const getRebusForSite = (siteId: string): Rebus | null => {
+  return rebuses.find((r) => r.siteId === siteId) || null
 }

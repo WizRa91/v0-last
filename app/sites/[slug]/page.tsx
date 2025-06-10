@@ -106,6 +106,8 @@ export default function SitePage({ params }: { params: { slug: string } }) {
     <div className="blog-post-container bg-cream-light dark:bg-dark-primary-bg text-brown dark:text-dark-text-primary">
       <div className="blog-post-content">
         <Link href="/map" className="back-button">
+          {" "}
+          {/* Assuming .back-button handles its own dark styles or is fine */}
           <ArrowLeft className="w-4 h-4" />
           Back to Map
         </Link>

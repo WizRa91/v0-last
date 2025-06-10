@@ -4,11 +4,12 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { X, HelpCircle, CheckCircle, XCircle } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { getRebusForSite } from "@/data/site-rebuses"
-import type { RebusQuestion } from "@/data/site-rebuses"
+import { getRebusForSite, type Rebus } from "@/data/site-rebuses"
+import { toast } from "sonner"
+import { Lightbulb, CheckCircle, XCircle } from "lucide-react"
 
 interface RebusModalProps {
   isOpen: boolean
@@ -18,154 +19,103 @@ interface RebusModalProps {
 }
 
 export function RebusModal({ isOpen, onClose, siteId, siteName }: RebusModalProps) {
-  const [rebus, setRebus] = useState<RebusQuestion | null>(null)
+  const [rebus, setRebus] = useState<Rebus | null>(null)
   const [answer, setAnswer] = useState("")
-  const [showHint, setShowHint] = useState(false)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
-  const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [showHint, setShowHint] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
-      const rebusData = getRebusForSite(siteId)
-      setRebus(rebusData)
+      const foundRebus = getRebusForSite(siteId)
+      setRebus(foundRebus)
+      // Reset state when modal opens
       setAnswer("")
-      setShowHint(false)
       setIsCorrect(null)
-      setHasSubmitted(false)
+      setShowHint(false)
     }
   }, [isOpen, siteId])
 
-  if (!isOpen || !rebus) return null
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const normalizedUserAnswer = answer.trim().toLowerCase()
-    const normalizedCorrectAnswer = rebus.answer.trim().toLowerCase()
+    if (!rebus) return
 
-    setIsCorrect(normalizedUserAnswer === normalizedCorrectAnswer)
-    setHasSubmitted(true)
+    const correct = answer.trim().toLowerCase() === rebus.answer.toLowerCase()
+    setIsCorrect(correct)
+
+    if (correct) {
+      toast.success("That's correct! Well done.")
+    } else {
+      toast.error("Not quite. Try again!")
+    }
   }
 
-  const handleTryAgain = () => {
-    setAnswer("")
-    setIsCorrect(null)
-    setHasSubmitted(false)
-  }
+  if (!rebus) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-dark-secondary-bg rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-4 border-b border-gray-200 dark:border-dark-border flex justify-between items-center">
-          <h2 className="text-xl font-bold text-brown dark:text-dark-text-primary">Rebus Puzzle: {siteName}</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 dark:text-dark-text-secondary hover:text-gray-700 dark:hover:text-dark-text-primary"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="p-6">
-          <div className="mb-6 flex justify-center">
-            <div className="relative w-full max-w-sm h-48">
-              <Image
-                src={rebus.imageUrl || "/placeholder.svg"}
-                alt="Rebus puzzle"
-                fill
-                style={{ objectFit: "contain" }}
-                className="rounded-md"
-              />
-            </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="bg-cream-light dark:bg-dark-secondary-bg border-brown/20 dark:border-dark-border max-w-md w-full">
+        <DialogHeader>
+          <DialogTitle className="text-brown dark:text-dark-text-primary font-['Cinzel'] text-2xl">
+            Rebus Puzzle: {siteName}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="py-4">
+          <div className="relative w-full h-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow-inner">
+            <Image
+              src={rebus.imageUrl || "/placeholder.svg"}
+              alt={`Rebus for ${siteName}`}
+              width={400}
+              height={200}
+              className="rounded-md object-contain"
+            />
           </div>
 
-          {!hasSubmitted ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="answer"
-                  className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-1"
-                >
-                  Your Answer:
-                </label>
-                <Input
-                  id="answer"
-                  type="text"
-                  value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  placeholder="Enter your answer..."
-                  className="w-full border-gray-300 dark:border-dark-border dark:bg-dark-primary-bg dark:text-dark-text-primary"
-                  required
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <Input
+              type="text"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              placeholder="Your answer..."
+              className="bg-white dark:bg-dark-primary-bg border-brown/20 dark:border-dark-border focus:ring-teal dark:focus:ring-dark-hover-teal"
+              disabled={isCorrect === true}
+            />
+            <Button
+              type="submit"
+              className="w-full bg-teal hover:bg-teal-dark dark:bg-dark-accent dark:hover:bg-dark-hover-teal text-white dark:text-dark-text-primary"
+              disabled={isCorrect === true}
+            >
+              Submit Answer
+            </Button>
+          </form>
 
-              {showHint && rebus.hint && (
-                <div className="bg-cream-light dark:bg-dark-primary-bg p-3 rounded-md text-sm text-gray-700 dark:text-dark-text-secondary">
-                  <span className="font-bold">Hint:</span> {rebus.hint}
-                </div>
-              )}
+          {isCorrect !== null && (
+            <div
+              className={`mt-4 p-3 rounded-lg flex items-center justify-center text-white ${isCorrect ? "bg-green-500" : "bg-red-500"}`}
+            >
+              {isCorrect ? <CheckCircle className="mr-2" /> : <XCircle className="mr-2" />}
+              <span>{isCorrect ? `Correct! The answer is "${rebus.answer}".` : "Incorrect. Please try again."}</span>
+            </div>
+          )}
 
-              <div className="flex justify-between">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowHint(true)}
-                  className="text-teal dark:text-dark-hover-teal border-teal dark:border-dark-hover-teal hover:bg-teal-light/20 dark:hover:bg-dark-hover-teal/20"
-                  disabled={showHint}
-                >
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  {showHint ? "Hint Shown" : "Show Hint"}
-                </Button>
-                <Button
-                  type="submit"
-                  className="bg-teal hover:bg-teal-dark dark:bg-dark-accent dark:hover:bg-dark-hover-teal text-white dark:text-dark-text-primary"
-                >
-                  Submit Answer
-                </Button>
-              </div>
-            </form>
-          ) : (
-            <div className="space-y-6">
-              <div
-                className={`p-4 rounded-md ${
-                  isCorrect
-                    ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300"
-                    : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300"
-                } flex items-start`}
+          {rebus.hint && (
+            <div className="mt-4 text-center">
+              <Button
+                variant="ghost"
+                onClick={() => setShowHint(!showHint)}
+                className="text-sm text-gray-500 dark:text-dark-text-secondary hover:text-brown dark:hover:text-dark-text-primary"
               >
-                <div className="flex-shrink-0 mr-3">
-                  {isCorrect ? <CheckCircle className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
-                </div>
-                <div>
-                  <p className="font-medium">{isCorrect ? "Correct!" : "Not quite right"}</p>
-                  <p className="text-sm mt-1">
-                    {isCorrect ? "Great job solving the rebus puzzle!" : `The correct answer is: "${rebus.answer}"`}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-3">
-                {!isCorrect && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleTryAgain}
-                    className="border-gray-300 dark:border-dark-border dark:text-dark-text-secondary"
-                  >
-                    Try Again
-                  </Button>
-                )}
-                <Button
-                  type="button"
-                  onClick={onClose}
-                  className="bg-teal hover:bg-teal-dark dark:bg-dark-accent dark:hover:bg-dark-hover-teal text-white dark:text-dark-text-primary"
-                >
-                  Close
-                </Button>
-              </div>
+                <Lightbulb className="w-4 h-4 mr-2" />
+                {showHint ? "Hide Hint" : "Show Hint"}
+              </Button>
+              {showHint && (
+                <p className="mt-2 text-sm p-3 bg-white/50 dark:bg-dark-primary-bg/50 rounded-lg text-brown dark:text-dark-text-secondary">
+                  {rebus.hint}
+                </p>
+              )}
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
