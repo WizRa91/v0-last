@@ -77,9 +77,11 @@ export function RebusModal({ isOpen, onClose, siteId, siteName }: RebusModalProp
               className="theme-input focus:ring-[var(--custom-accent)]"
               disabled={isCorrect === true}
             />
-            <Button type="submit" className="theme-button" disabled={isCorrect === true}>
-              Submit Answer
-            </Button>
+            <div className="w-full flex justify-center">
+              <Button type="submit" className="theme-button" disabled={isCorrect === true}>
+                Submit Answer
+              </Button>
+            </div>
           </form>
 
           {isCorrect !== null && (
