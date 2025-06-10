@@ -11,7 +11,7 @@ export function NotesButton({ siteSlug }: NotesButtonProps) {
   return (
     <Link href={`/notes/${siteSlug}`} passHref>
       <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-secondary-bg shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
+        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-secondary-bg shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-[#4A7A7A]"
         title="View/Add Notes"
       >
         <NotebookPen
