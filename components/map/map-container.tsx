@@ -66,12 +66,12 @@ export default function MapContainer() {
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="flex items-center gap-2 theme-text hover:theme-accent-text dark:text-white dark:hover:text-white/80 transition-colors"
+              className="flex items-center gap-2 text-[#8C6F5A] hover:text-[#4A7A7A] dark:text-white dark:hover:text-white/80 transition-colors"
             >
               <Home className="h-5 w-5" />
               <span className="text-sm font-['Montserrat']">Home</span>
             </Link>
-            <div className="h-4 w-px bg-[var(--custom-text)]/30 dark:bg-white/30"></div>
+            <div className="h-4 w-px bg-[#8C6F5A]/30 dark:bg-white/30"></div>
             <h2 className="top-bar-title">INTERACTIVE MAP OF UNUSUAL FORMATIONS</h2>
           </div>
         </div>

@@ -12,7 +12,7 @@ export function Header() {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold theme-text hover:opacity-80 transition-opacity"
         >
-          <Mountain className="h-6 w-6 text-brown dark:text-dark-text-secondary" />
+          <Mountain className="h-6 w-6 theme-text dark:text-dark-text-secondary" />
           <span className="font-display tracking-tight">Archaic Knowledge</span>
         </Link>
         <AuthButtons />

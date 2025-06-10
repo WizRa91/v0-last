@@ -53,14 +53,12 @@ export function RebusModal({ isOpen, onClose, siteId, siteName }: RebusModalProp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-cream-light dark:bg-dark-secondary-bg border-brown/20 dark:border-dark-border max-w-md w-full">
+      <DialogContent className="theme-secondary-bg theme-border max-w-md w-full">
         <DialogHeader>
-          <DialogTitle className="text-brown dark:text-dark-text-primary font-['Cinzel'] text-2xl">
-            Rebus Puzzle: {siteName}
-          </DialogTitle>
+          <DialogTitle className="theme-text font-['Cinzel'] text-2xl">Rebus Puzzle: {siteName}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <div className="relative w-full h-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow-inner flex justify-center">
+          <div className="relative w-full h-auto theme-bg dark:bg-gray-800 p-4 rounded-lg shadow-inner flex justify-center">
             <Image
               src={rebus.imageUrl || "/placeholder.svg"}
               alt={`Rebus for ${siteName}`}
@@ -76,14 +74,10 @@ export function RebusModal({ isOpen, onClose, siteId, siteName }: RebusModalProp
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="Your answer..."
-              className="bg-white dark:bg-dark-primary-bg border-brown/20 dark:border-dark-border focus:ring-teal dark:focus:ring-dark-hover-teal"
+              className="theme-input focus:ring-[var(--custom-accent)]"
               disabled={isCorrect === true}
             />
-            <Button
-              type="submit"
-              className="w-full bg-teal hover:bg-teal-dark dark:bg-dark-accent dark:hover:bg-dark-hover-teal text-white dark:text-dark-text-primary"
-              disabled={isCorrect === true}
-            >
+            <Button type="submit" className="theme-button" disabled={isCorrect === true}>
               Submit Answer
             </Button>
           </form>
@@ -102,15 +96,13 @@ export function RebusModal({ isOpen, onClose, siteId, siteName }: RebusModalProp
               <Button
                 variant="ghost"
                 onClick={() => setShowHint(!showHint)}
-                className="text-sm text-gray-500 dark:text-dark-text-secondary hover:text-brown dark:hover:text-dark-text-primary"
+                className="theme-secondary-text hover:theme-text text-sm"
               >
                 <Lightbulb className="w-4 h-4 mr-2" />
                 {showHint ? "Hide Hint" : "Show Hint"}
               </Button>
               {showHint && (
-                <p className="mt-2 text-sm p-3 bg-white/50 dark:bg-dark-primary-bg/50 rounded-lg text-brown dark:text-dark-text-secondary">
-                  {rebus.hint}
-                </p>
+                <p className="mt-2 text-sm p-3 bg-[var(--custom-bg)]/50 rounded-lg theme-text">{rebus.hint}</p>
               )}
             </div>
           )}

@@ -1,6 +1,6 @@
 "use client"
 
-import { DialogContent } from "@/components/ui/dialog"
+import { DialogContent as DialogContentUI } from "@/components/ui/dialog"
 
 import { Dialog } from "@/components/ui/dialog"
 
@@ -60,7 +60,7 @@ export function AuthButtons() {
         {/* QR Code Button - Triggers the standard SignInModal for now */}
         <Button
           onClick={() => setShowSignInModalFromQR(true)}
-          className="rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10 bg-cream text-brown hover:bg-cream/90 dark:bg-dark-accent dark:text-dark-text-primary dark:hover:bg-dark-hover-teal border border-brown/30 dark:border-dark-border transition-all duration-200 p-2.5"
+          className="rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10 theme-secondary-bg theme-text hover:bg-[var(--custom-secondary-bg)]/90 border theme-border dark:bg-dark-accent dark:text-dark-text-primary dark:hover:bg-dark-hover-teal transition-all duration-200 p-2.5"
           size="icon"
           aria-label="Sign in with QR code"
           title="Sign in with QR code"
@@ -69,7 +69,7 @@ export function AuthButtons() {
         </Button>
         <SignInModal
           triggerButton={
-            <Button className="rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10 bg-cream text-brown hover:bg-cream/90 dark:bg-dark-accent dark:text-dark-text-primary dark:hover:bg-dark-hover-teal border-y border-r border-brown/30 dark:border-y dark:border-r dark:border-dark-border transition-all duration-200 px-4 py-2 text-sm">
+            <Button className="rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10 theme-secondary-bg theme-text hover:bg-[var(--custom-secondary-bg)]/90 border-y border-r theme-border dark:bg-dark-accent dark:text-dark-text-primary dark:hover:bg-dark-hover-teal transition-all duration-200 px-4 py-2 text-sm">
               Sign In
             </Button>
           }
@@ -80,14 +80,14 @@ export function AuthButtons() {
       {/* It's a bit redundant but fulfills the "QR button opens a modal" idea simply */}
       {/* A more advanced QR flow would require a different modal or logic */}
       <Dialog open={showSignInModalFromQR} onOpenChange={setShowSignInModalFromQR}>
-        <DialogContent className="theme-secondary-bg theme-text theme-border p-0">
+        <DialogContentUI className="theme-secondary-bg theme-text theme-border p-0">
           {/* Re-using SignInModal's internal structure by passing children or a specific prop */}
           {/* For simplicity, we're just re-using the component. Ideally, SignInModal would be more composable. */}
           <SignInModal
             isOpenedExternally={showSignInModalFromQR}
             onExternalClose={() => setShowSignInModalFromQR(false)}
           />
-        </DialogContent>
+        </DialogContentUI>
       </Dialog>
     </div>
   )

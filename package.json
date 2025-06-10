@@ -11,7 +11,6 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "latest",
     "@clerk/nextjs": "latest",
-    "@heroicons/react": "latest",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -61,7 +60,6 @@
     "react-hook-form": "^7.54.1",
     "react-leaflet": "latest",
     "react-resizable-panels": "^2.1.7",
-    "react-share": "latest",
     "recharts": "2.15.0",
     "sonner": "latest",
     "swiper": "latest",
