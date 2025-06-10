@@ -181,7 +181,7 @@ export default function SitePage({ params }: { params: { slug: string } }) {
               </Button>
             </div>
 
-            <div className="p-6 rounded-lg shadow-lg bg-white dark:bg-dark-secondary-bg mt-6">
+            <div className="p-6 rounded-lg shadow-lg bg-[#f8f0e3] dark:bg-dark-secondary-bg mt-6">
               <h3 className="text-xl font-bold text-brown dark:text-dark-text-primary mb-4 font-['Cinzel']">
                 Site Information
               </h3>
