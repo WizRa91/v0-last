@@ -298,7 +298,7 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                 value={searchText}
                 onChange={onSearchChange}
                 placeholder="Search ancient sites..."
-                className="search-input"
+                className="search-input text-white"
               />
             </div>
             <Button variant="ghost" size="icon" onClick={handleShare} className="text-white hover:bg-white/10">
