@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation"
 import "../../styles/map-styles.css"
 import type { Site } from "./types" // Import the updated Site type
 import MapPinPopup from "../map-pin-popup"
-import { createRoot } from "react-dom/client"
 
 // Fix for default markers in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -292,14 +291,7 @@ export default function IntegratedMap({ searchText, activeCategory, onSiteSelect
             }}
           >
             <Popup>
-              <div
-                ref={(el) => {
-                  if (el) {
-                    const root = createRoot(el)
-                    root.render(<MapPinPopup site={site} onReadMore={handleReadMore} />)
-                  }
-                }}
-              />
+              <MapPinPopup site={site} onReadMore={handleReadMore} />
             </Popup>
           </Marker>
         ))}
