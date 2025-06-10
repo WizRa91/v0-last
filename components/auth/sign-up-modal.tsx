@@ -18,180 +18,144 @@ import { useAuth } from "@/hooks/useAuth"
 
 export const SignUpModal = () => {
   const id = useId()
-  const { signUpWithEmail, signInWithGoogle, loading: authLoading } = useAuth()
+  const { signUpWithEmail, signInWithGoogle } = useAuth()
+  const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [fullName, setFullName] = useState("")
-  const [modalLoading, setModalLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.")
-      return
-    }
-    if (!email || !password || !fullName) {
-      setError("Please fill in all required fields.")
-      return
-    }
+    if (!fullName || !email || !password) return
 
-    setModalLoading(true)
+    setLoading(true)
     try {
       await signUpWithEmail(email, password, fullName)
-      setOpen(false) // Close modal on success (or after email confirmation instruction)
+      setOpen(false)
+      setFullName("")
       setEmail("")
       setPassword("")
-      setConfirmPassword("")
-      setFullName("")
-      // Toast for email confirmation will be shown from useAuth
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.")
-      console.error("Sign up modal error:", err)
+    } catch (error) {
+      // Error is handled in the hook
     } finally {
-      setModalLoading(false)
+      setLoading(false)
     }
   }
 
   const handleGoogleSignIn = async () => {
-    setModalLoading(true)
+    setLoading(true)
     try {
       await signInWithGoogle()
     } catch (error) {
-      console.error("Google sign in modal error:", error)
+      // Error is handled in the hook
     } finally {
-      setModalLoading(false)
+      setLoading(false)
     }
   }
 
-  const isLoading = authLoading || modalLoading
-
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(o) => {
-        setOpen(o)
-        if (!o) setError(null)
-      }}
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          className="bg-teal hover:bg-teal-dark text-cream 
-                     dark:bg-dark-hover-teal dark:hover:opacity-80 dark:text-dark-text-primary 
-                     px-4 py-2 h-10 rounded-lg shadow-sm transition-all duration-200"
-        >
+        <Button className="bg-[#4A7A7A] text-[#F5F1E8] hover:bg-[#8C6F5A] dark:bg-[var(--custom-accent)] dark:text-[var(--custom-text)] dark:hover:bg-[var(--custom-hover)] border border-[var(--custom-border)] transition-all duration-200 px-4 py-2 rounded-lg">
           Sign up
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-cream dark:bg-dark-secondary-bg text-brown dark:text-dark-text-primary border-brown/20 dark:border-dark-border">
+      <DialogContent className="theme-secondary-bg theme-text">
         <div className="flex flex-col items-center gap-2">
           <div
-            className="flex size-11 shrink-0 items-center justify-center rounded-full border border-brown/20 dark:border-dark-border"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border theme-border"
             aria-hidden="true"
           >
-            {/* You can use a different icon for sign up */}
             <svg
+              className="stroke-zinc-800 dark:stroke-zinc-100 theme-text"
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              viewBox="0 0 32 32"
+              aria-hidden="true"
             >
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <line x1="19" x2="19" y1="8" y2="14" />
-              <line x1="22" x2="16" y1="11" y2="11" />
+              <circle cx="16" cy="16" r="12" fill="none" strokeWidth="8" />
             </svg>
           </div>
           <DialogHeader>
-            <DialogTitle className="sm:text-center text-brown dark:text-dark-text-primary">
-              Create an Account
-            </DialogTitle>
-            <DialogDescription className="sm:text-center text-brown-light dark:text-dark-text-secondary">
-              Join Archaic Knowledge to save your progress and discoveries.
+            <DialogTitle className="sm:text-center theme-text">Sign up</DialogTitle>
+            <DialogDescription className="sm:text-center theme-secondary-text">
+              We just need a few details to get you started.
             </DialogDescription>
           </DialogHeader>
         </div>
 
-        {error && (
-          <p className="text-sm text-red-600 dark:text-red-400 text-center bg-red-100 dark:bg-red-900/30 p-2 rounded-md">
-            {error}
-          </p>
-        )}
-
         <form onSubmit={handleEmailSignUp} className="space-y-5">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor={`${id}-fullName`} className="text-brown dark:text-dark-text-secondary">
-                Full Name
+              <Label htmlFor={`${id}-name`} className="theme-text">
+                Full name
               </Label>
               <Input
-                id={`${id}-fullName`}
-                placeholder="Your Name"
+                id={`${id}-name`}
+                placeholder="Matt Welsh"
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="bg-white dark:bg-dark-primary-bg border-brown/20 dark:border-dark-border placeholder:text-brown-light/70 dark:placeholder:text-dark-text-secondary/70"
+                className="theme-input"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor={`${id}-email-signup`} className="text-brown dark:text-dark-text-secondary">
+              <Label htmlFor={`${id}-email`} className="theme-text">
                 Email
               </Label>
               <Input
-                id={`${id}-email-signup`}
+                id={`${id}-email`}
                 placeholder="hi@yourcompany.com"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-white dark:bg-dark-primary-bg border-brown/20 dark:border-dark-border placeholder:text-brown-light/70 dark:placeholder:text-dark-text-secondary/70"
+                className="theme-input"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor={`${id}-password-signup`} className="text-brown dark:text-dark-text-secondary">
+              <Label htmlFor={`${id}-password`} className="theme-text">
                 Password
               </Label>
               <Input
-                id={`${id}-password-signup`}
-                placeholder="Create a password"
+                id={`${id}-password`}
+                placeholder="Enter your password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-white dark:bg-dark-primary-bg border-brown/20 dark:border-dark-border placeholder:text-brown-light/70 dark:placeholder:text-dark-text-secondary/70"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`${id}-confirmPassword`} className="text-brown dark:text-dark-text-secondary">
-                Confirm Password
-              </Label>
-              <Input
-                id={`${id}-confirmPassword`}
-                placeholder="Confirm your password"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="bg-white dark:bg-dark-primary-bg border-brown/20 dark:border-dark-border placeholder:text-brown-light/70 dark:placeholder:text-dark-text-secondary/70"
+                className="theme-input"
               />
             </div>
           </div>
-          <Button
-            type="submit"
-            className="w-full bg-teal hover:bg-teal-dark text-cream dark:bg-dark-hover-teal dark:hover:opacity-80 dark:text-cream"
-          >
-            Sign Up
+          <Button type="submit" className="w-full theme-button text-[#F5F1E8]" disabled={loading}>
+            {loading ? "Creating account..." : "Sign up"}
           </Button>
         </form>
+
+        <div className="flex items-center gap-3 before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
+          <span className="text-xs theme-secondary-text">Or</span>
+        </div>
+
+        <Button
+          variant="outline"
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+          className="theme-button text-[#F5F1E8]"
+        >
+          {loading ? "Signing up..." : "Continue with Google"}
+        </Button>
+
+        <p className="text-center text-xs theme-secondary-text">
+          By signing up you agree to our{" "}
+          <a className="underline hover:no-underline theme-nav-link" href="#">
+            Terms
+          </a>
+          .
+        </p>
       </DialogContent>
     </Dialog>
   )
