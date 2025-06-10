@@ -4,7 +4,9 @@ import { cinzel, montserrat } from "./fonts"
 import type { Metadata, Viewport } from "next"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Providers } from "./providers"
+import { Providers as AppProviders } from "./providers"
+import { AuthProvider } from "@/hooks/useAuth"
+import { ConditionalHeader } from "@/components/conditional-header" // Use ConditionalHeader
 
 export const metadata: Metadata = {
   title: {
@@ -83,13 +85,18 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
       </head>
-      <body className={`${cinzel.variable} ${montserrat.variable} font-body min-h-screen bg-cream text-brown`}>
-        <Providers>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </Providers>
+      <body
+        className={`${cinzel.variable} ${montserrat.variable} font-body min-h-screen bg-cream text-brown dark:bg-dark-primary-bg dark:text-dark-text-primary`}
+      >
+        <AppProviders>
+          <AuthProvider>
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+              <ConditionalHeader /> {/* Correctly placed within providers */}
+              <main>{children}</main>
+              <Toaster />
+            </ThemeProvider>
+          </AuthProvider>
+        </AppProviders>
       </body>
     </html>
   )

@@ -126,24 +126,21 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
 
         {/* Modal */}
         <div className="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto z-10">
-          <div className="bg-gradient-to-b from-amber-50 to-stone-100 rounded-xl shadow-2xl border-4 border-amber-600 relative">
+          <div className="theme-secondary-bg rounded-xl shadow-2xl border-4 theme-border relative">
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-stone-200 hover:bg-stone-300 transition-colors"
+              className="absolute top-4 right-4 z-10 p-2 rounded-full theme-secondary-bg hover:bg-[var(--custom-border)]/50 transition-colors"
               aria-label="Close quiz"
             >
-              <X className="h-5 w-5 text-stone-700" />
+              <X className="h-5 w-5 theme-text" />
             </button>
 
             {/* Content */}
             <div className="relative p-8 text-center">
-              <h3 className="text-2xl font-bold text-amber-900 mb-4">Quiz Not Available</h3>
-              <p className="text-amber-800 mb-4">Sorry, no quiz questions are available for this site.</p>
-              <Button
-                onClick={onClose}
-                className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-2 border-amber-800"
-              >
+              <h3 className="text-2xl font-bold theme-text mb-4">Quiz Not Available</h3>
+              <p className="theme-secondary-text mb-4">Sorry, no quiz questions are available for this site.</p>
+              <Button onClick={onClose} className="theme-button">
                 <Home className="mr-2 h-4 w-4" />
                 Close
               </Button>
@@ -164,7 +161,7 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
 
       {/* Modal - Centered with max-width */}
       <div className="relative w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto z-10">
-        <div className="bg-gradient-to-b from-amber-50 to-stone-100 rounded-xl shadow-2xl border-4 border-amber-600 relative">
+        <div className="theme-secondary-bg rounded-xl shadow-2xl border-4 theme-border relative">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10 bg-center bg-no-repeat bg-contain rounded-xl overflow-hidden">
             <img
@@ -186,10 +183,10 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-stone-200 hover:bg-stone-300 transition-colors"
+            className="absolute top-4 right-4 z-10 p-2 rounded-full theme-secondary-bg hover:bg-[var(--custom-border)]/50 transition-colors"
             aria-label="Close quiz"
           >
-            <X className="h-5 w-5 text-stone-700" />
+            <X className="h-5 w-5 theme-text" />
           </button>
 
           {/* Content */}
@@ -205,8 +202,8 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                   {mascotSide === "left" && (
                     <div className="text-center flex flex-col items-center">
                       {/* Speech Bubble */}
-                      <div className="bg-amber-100 border-2 border-amber-600 rounded-lg p-4 shadow-lg mb-2 max-w-xs">
-                        <p className="text-sm font-medium text-amber-900 break-words">{currentQ.question}</p>
+                      <div className="theme-secondary-bg border-2 theme-border rounded-lg p-4 shadow-lg mb-2 max-w-xs">
+                        <p className="text-sm font-medium theme-text break-words">{currentQ.question}</p>
                       </div>
 
                       {/* Mascot */}
@@ -222,7 +219,7 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                       </div>
 
                       {/* Name */}
-                      <p className="text-amber-800 font-bold text-lg">{mascotName}</p>
+                      <p className="theme-secondary-text font-bold text-lg">{mascotName}</p>
                     </div>
                   )}
                 </div>
@@ -231,9 +228,9 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                 <div className="lg:col-span-1">
                   {/* Progress */}
                   <div className="text-center mb-6">
-                    <div className="inline-flex items-center gap-2 bg-amber-200 px-4 py-2 rounded-full border-2 border-amber-600">
+                    <div className="inline-flex items-center gap-2 bg-[var(--custom-accent)]/20 px-4 py-2 rounded-full border-2 theme-border">
                       <Crown className="h-4 w-4 text-amber-700" />
-                      <span className="font-bold text-amber-900">
+                      <span className="font-bold theme-text">
                         {quizSiteName} - Question {currentQuestion + 1}/{questions.length}
                       </span>
                     </div>
@@ -241,8 +238,8 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
 
                   {/* Question (for mobile when mascot is on right) */}
                   {mascotSide === "right" && (
-                    <div className="lg:hidden mb-6 bg-amber-100 border-2 border-amber-600 rounded-lg p-4">
-                      <p className="font-medium text-amber-900 break-words">{currentQ.question}</p>
+                    <div className="lg:hidden mb-6 theme-secondary-bg border-2 theme-border rounded-lg p-4">
+                      <p className="font-medium theme-text break-words">{currentQ.question}</p>
                     </div>
                   )}
 
@@ -254,14 +251,14 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                         onClick={() => setSelectedAnswer(index)}
                         className={`p-3 rounded-lg border-2 text-left transition-all duration-200 h-20 flex items-start gap-2 overflow-hidden ${
                           selectedAnswer === index
-                            ? "bg-amber-200 border-amber-600 shadow-lg transform scale-105"
-                            : "bg-stone-50 border-stone-300 hover:bg-stone-100 hover:border-stone-400"
+                            ? "bg-[var(--custom-accent)]/30 border-[var(--custom-accent)] shadow-lg transform scale-105"
+                            : "theme-secondary-bg border-theme-border hover:bg-[var(--custom-border)]/30 hover:border-[var(--custom-accent)]/50"
                         }`}
                       >
-                        <span className="font-bold text-amber-900 flex-shrink-0 text-sm mt-0.5">
+                        <span className="font-bold theme-text flex-shrink-0 text-sm mt-0.5">
                           {String.fromCharCode(65 + index)})
                         </span>
-                        <span className="text-stone-800 text-sm leading-tight line-clamp-3 overflow-hidden text-ellipsis">
+                        <span className="theme-text text-sm leading-tight line-clamp-3 overflow-hidden text-ellipsis">
                           {option}
                         </span>
                       </button>
@@ -270,11 +267,7 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
 
                   {/* Confirm Button */}
                   <div className="text-center">
-                    <Button
-                      onClick={handleConfirm}
-                      disabled={selectedAnswer === null}
-                      className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 disabled:from-stone-400 disabled:to-stone-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg border-2 border-amber-800 disabled:border-stone-600"
-                    >
+                    <Button onClick={handleConfirm} disabled={selectedAnswer === null} className="theme-button">
                       <Sword className="mr-2 h-4 w-4" />
                       Confirm Answer
                     </Button>
@@ -290,8 +283,8 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                   {mascotSide === "right" && (
                     <div className="text-center flex flex-col items-center">
                       {/* Speech Bubble */}
-                      <div className="bg-amber-100 border-2 border-amber-600 rounded-lg p-4 shadow-lg mb-2 max-w-xs">
-                        <p className="text-sm font-medium text-amber-900 break-words">{currentQ.question}</p>
+                      <div className="theme-secondary-bg border-2 theme-border rounded-lg p-4 shadow-lg mb-2 max-w-xs">
+                        <p className="text-sm font-medium theme-text break-words">{currentQ.question}</p>
                       </div>
 
                       {/* Mascot */}
@@ -307,7 +300,7 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                       </div>
 
                       {/* Name */}
-                      <p className="text-amber-800 font-bold text-lg">{mascotName}</p>
+                      <p className="theme-secondary-text font-bold text-lg">{mascotName}</p>
                     </div>
                   )}
                 </div>
@@ -328,29 +321,26 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                       }}
                     />
                   </div>
-                  <p className="text-amber-800 font-bold text-lg mb-4">{mascotName}</p>
+                  <p className="theme-secondary-text font-bold text-lg mb-4">{mascotName}</p>
 
-                  <div className="bg-red-100 border-2 border-red-400 rounded-lg p-6 shadow-lg">
-                    <h3 className="text-2xl font-bold text-red-800 mb-2">Sorry, that's incorrect!</h3>
+                  <div className="bg-red-500/20 border-2 border-red-500 rounded-lg p-6 shadow-lg">
+                    <h3 className="text-2xl font-bold text-red-700 mb-2">Sorry, that's incorrect!</h3>
                     <p className="text-red-700">
                       The correct answer was: <strong>{currentQ.options[currentQ.correctAnswer]}</strong>
                     </p>
-                    {currentQ.explanation && <p className="text-red-600 mt-2 text-sm">{currentQ.explanation}</p>}
+                    {currentQ.explanation && <p className="text-red-700 mt-2 text-sm">{currentQ.explanation}</p>}
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button
-                    onClick={handleTryAgain}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-2 border-blue-800"
-                  >
+                  <Button onClick={handleTryAgain} className="theme-button bg-blue-600 hover:bg-blue-700">
                     <RotateCcw className="mr-2 h-4 w-4" />
                     Try Again
                   </Button>
                   <Button
                     onClick={onClose}
                     variant="outline"
-                    className="border-2 border-stone-400 hover:bg-stone-100 font-bold py-3 px-6 rounded-lg"
+                    className="border-2 theme-border hover:bg-[var(--custom-border)]/30 font-bold py-3 px-6 rounded-lg"
                   >
                     <Home className="mr-2 h-4 w-4" />
                     Return Home
@@ -373,23 +363,23 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                       }}
                     />
                   </div>
-                  <p className="text-amber-800 font-bold text-lg mb-4">{mascotName}</p>
+                  <p className="theme-secondary-text font-bold text-lg mb-4">{mascotName}</p>
 
-                  <div className="bg-gradient-to-r from-yellow-100 to-amber-100 border-4 border-yellow-500 rounded-lg p-8 shadow-2xl relative overflow-hidden">
+                  <div className="theme-secondary-bg border-4 border-yellow-500 rounded-lg p-8 shadow-2xl relative overflow-hidden">
                     {/* Celebration Effects */}
                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-200/20 to-amber-200/20 animate-pulse" />
 
-                    <h3 className="text-3xl font-bold text-amber-900 mb-4">🎉 Congratulations! 🎉</h3>
-                    <p className="text-xl text-amber-800 mb-2">You're a {quizSiteName} Expert!</p>
-                    <p className="text-amber-700 mb-4">You've mastered the mysteries of {quizSiteName}!</p>
+                    <h3 className="text-3xl font-bold theme-text mb-4">🎉 Congratulations! 🎉</h3>
+                    <p className="text-xl theme-text mb-2">You're a {quizSiteName} Expert!</p>
+                    <p className="theme-text mb-4">You've mastered the mysteries of {quizSiteName}!</p>
 
                     {user && (
-                      <div className="bg-white/50 rounded-lg p-4 mb-4">
+                      <div className="bg-[var(--custom-bg)]/50 rounded-lg p-4 mb-4">
                         <div className="flex items-center justify-center gap-2 mb-2">
-                          <Coins className="h-6 w-6 text-amber-600" />
-                          <span className="text-2xl font-bold text-amber-700">+5 Aurei</span>
+                          <Coins className="h-6 w-6 theme-accent-text" />
+                          <span className="text-2xl font-bold theme-accent-text">+5 Aurei</span>
                         </div>
-                        <p className="text-sm text-amber-600">Loyalty Points Earned!</p>
+                        <p className="text-sm theme-accent-text">Loyalty Points Earned!</p>
                         {aureiAwarded && (
                           <p className="text-xs text-green-600 mt-1">✓ Aurei successfully added to your wallet!</p>
                         )}
@@ -401,7 +391,7 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                 <Button
                   onClick={handleClaimVictory}
                   disabled={awardingAurei || aureiAwarded}
-                  className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-8 rounded-lg shadow-lg border-2 border-yellow-600 transform hover:scale-105 transition-all duration-200"
+                  className="theme-button bg-yellow-500 hover:bg-yellow-600 transform hover:scale-105 transition-all duration-200"
                   size="lg"
                 >
                   <Crown className="mr-2 h-5 w-5" />
@@ -414,7 +404,7 @@ export function QuizModal({ isOpen, onClose, siteId, siteName }: QuizModalProps)
                         : "Claim Victory"}
                 </Button>
 
-                {!user && <p className="text-sm text-amber-700 mt-2">Sign in to earn Aurei rewards!</p>}
+                {!user && <p className="text-sm theme-text mt-2">Sign in to earn Aurei rewards!</p>}
               </div>
             )}
           </div>

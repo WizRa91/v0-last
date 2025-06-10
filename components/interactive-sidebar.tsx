@@ -94,7 +94,7 @@ const SiteCard: React.FC<SiteCardProps> = ({ site, onSiteClick }) => {
         <img src={site.cover_image || "/placeholder.svg"} alt={site.name} className="site-card-image" />
         {/* Assuming media array exists and imageCount can be derived or is a direct prop */}
         {site.media && site.media.length > 1 && (
-          <div className="absolute top-1 right-1 theme-accent text-white text-xs px-1.5 py-0.5 rounded font-['Montserrat']">
+          <div className="absolute top-1 right-1 theme-accent text-[var(--custom-button-text)] text-xs px-1.5 py-0.5 rounded font-['Montserrat']">
             {site.media.length}
           </div>
         )}
@@ -286,7 +286,7 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                 variant="ghost"
                 size="icon"
                 onClick={handleBackToNavigation}
-                className="text-white hover:bg-white/10 mr-2"
+                className="text-[var(--custom-button-text)] hover:bg-[var(--custom-button-text)]/10 mr-2"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
@@ -298,10 +298,15 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                 value={searchText}
                 onChange={onSearchChange}
                 placeholder="Search ancient sites..."
-                className="search-input"
+                className="search-input text-white"
               />
             </div>
-            <Button variant="ghost" size="icon" onClick={handleShare} className="text-white hover:bg-white/10">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleShare}
+              className="text-[var(--custom-button-text)] hover:bg-[var(--custom-button-text)]/10"
+            >
               <Share2 className="h-5 w-5" />
             </Button>
           </div>
@@ -336,7 +341,7 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                 {!isBottomExpanded && (
                   <div className="p-6 border-b border-[#CDAF87]/30 dark:border-[#3A3A3A]">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 theme-accent rounded-lg flex items-center justify-center shadow-[3px_3px_6px_rgba(74,122,122,0.3)] dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3)]">
+                      <div className="w-12 h-12 theme-accent rounded-lg flex items-center justify-center shadow-[3px_3px_6px_rgba(74,122,122,0.3)] dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3)] text-[var(--custom-button-text)]">
                         <Globe className="h-6 w-6 text-white" />
                       </div>
                       <div>
@@ -377,7 +382,7 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                         variant="ghost"
                         size="sm"
                         onClick={() => setIsUpperExpanded(!isUpperExpanded)}
-                        className="theme-text hover:theme-accent-text hover:bg-[#CDAF87]/30 dark:hover:bg-[#3A3A3A]/30 ml-auto"
+                        className="theme-text hover:theme-accent-text hover:bg-[var(--custom-border)]/30 ml-auto"
                       >
                         <MoreHorizontal className="h-5 w-5" />
                       </Button>
@@ -386,13 +391,13 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                 )}
                 {isBottomExpanded && (
                   <div className="absolute top-0 left-0 right-0 theme-secondary-bg z-50 border-b border-[#CDAF87]/30 dark:border-[#3A3A3A]">
-                    <div className="theme-accent p-4 flex items-center justify-between">
+                    <div className="theme-accent p-4 flex items-center justify-between text-[var(--custom-button-text)]">
                       <h2 className="text-white font-['Cinzel'] font-semibold">Navigation</h2>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => setIsBottomExpanded(false)}
-                        className="text-white hover:bg-[#8C6F5A] dark:hover:bg-[#8B5CF6]"
+                        className="text-[var(--custom-button-text)] hover:bg-[var(--custom-hover)]"
                       >
                         <ChevronDown className="h-5 w-5" />
                       </Button>

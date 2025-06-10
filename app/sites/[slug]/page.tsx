@@ -154,10 +154,10 @@ export default function SitePage({ params }: { params: { slug: string } }) {
 
             <div className="p-6 rounded-lg shadow-lg bg-white dark:bg-dark-secondary-bg">
               <h3 className="text-xl font-bold text-brown dark:text-dark-text-primary mb-3 font-['Cinzel'] flex items-center">
-                <Layers size={20} className="mr-2 text-teal dark:text-dark-hover-teal" />
+                <Layers size={20} className="mr-2 theme-accent-text" />
                 Site Category
               </h3>
-              <p className="text-lg font-semibold text-teal dark:text-dark-hover-teal mb-1">{site.primaryCategory}</p>
+              <p className="text-lg font-semibold theme-accent-text mb-1">{site.primaryCategory}</p>
               <p className="text-sm text-gray-600 dark:text-dark-text-secondary mb-4">
                 This site is primarily classified under {site.primaryCategory}. Explore more sites in this category or
                 browse all classifications.
@@ -175,7 +175,7 @@ export default function SitePage({ params }: { params: { slug: string } }) {
               <Button
                 onClick={() => router.push("/map?show_categories=true")}
                 variant="outline"
-                className="w-full text-teal border-teal hover:bg-teal hover:text-white dark:text-dark-accent dark:border-dark-accent dark:hover:bg-dark-hover-teal dark:hover:text-dark-text-primary"
+                className="w-full text-[var(--custom-accent)] border-[var(--custom-accent)] hover:bg-[var(--custom-accent)] hover:text-[var(--custom-button-text)] dark:text-dark-accent dark:border-dark-accent dark:hover:bg-dark-hover-teal dark:hover:text-dark-text-primary"
               >
                 View All Categories
               </Button>
@@ -201,8 +201,10 @@ export default function SitePage({ params }: { params: { slug: string } }) {
                   <p>{site.type}</p>
                 </div>
                 {site.unesco && (
-                  <div className="bg-teal-light/20 dark:bg-dark-hover-teal/20 p-3 rounded-lg">
-                    <p className="font-medium text-teal-dark dark:text-dark-hover-teal">UNESCO World Heritage Site</p>
+                  <div className="bg-[var(--custom-accent)]/20 p-3 rounded-lg">
+                    <p className="font-medium text-[var(--custom-accent)] dark:text-[var(--custom-hover)]">
+                      UNESCO World Heritage Site
+                    </p>
                   </div>
                 )}
                 <div className="pt-2 border-t border-cream-dark dark:border-dark-border">

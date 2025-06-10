@@ -1,85 +1,110 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Star } from "lucide-react"
 import { toast } from "sonner"
+import { useAuth } from "@/hooks/useAuth"
 import type { InteractiveButtonProps } from "./types"
 
 export function WantToVisitButton({ siteId, className }: InteractiveButtonProps) {
-  const [isWantToGo, setIsWantToGo] = useState(false)
-  const [wantToGoCount, setWantToGoCount] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const { user, supabase } = useAuth()
+  const [wantsToVisit, setWantsToVisit] = useState(false)
+  const [wantToVisitCount, setWantToVisitCount] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  const fetchInteractionState = useCallback(async () => {
+    setLoading(true)
+    // Fetch total count
+    const { count, error: countError } = await supabase
+      .from("user_interactions")
+      .select("*", { count: "exact", head: true })
+      .eq("site_id", siteId)
+      .eq("interaction_type", "want_to_go")
+
+    if (countError) {
+      console.error("Error fetching want to go count:", countError)
+    } else {
+      setWantToVisitCount(count || 0)
+    }
+
+    // Fetch user-specific interaction
+    if (user) {
+      const { data: userData, error: userError } = await supabase
+        .from("user_interactions")
+        .select("id")
+        .eq("site_id", siteId)
+        .eq("user_id", user.id)
+        .eq("interaction_type", "want_to_go")
+        .maybeSingle()
+
+      if (userError) {
+        console.error("Error fetching user interaction:", userError)
+      } else {
+        setWantsToVisit(!!userData)
+      }
+    } else {
+      setWantsToVisit(false)
+    }
+    setLoading(false)
+  }, [supabase, siteId, user])
 
   useEffect(() => {
-    // For demo purposes, we'll use localStorage
-    handleLocalStorage()
-  }, [siteId])
+    fetchInteractionState()
+  }, [fetchInteractionState])
 
-  const handleLocalStorage = () => {
-    if (!localStorage.getItem("wantToGoUsers")) {
-      localStorage.setItem("wantToGoUsers", JSON.stringify({}))
+  const toggleWantToVisit = async () => {
+    if (!user) {
+      toast.info("Please sign in to save sites to your wishlist.")
+      return
     }
-
-    if (!localStorage.getItem("uniqueUserId")) {
-      localStorage.setItem("uniqueUserId", "user_" + Date.now())
-    }
-    const userId = localStorage.getItem("uniqueUserId") || ""
-
-    const wantToGoUsers = JSON.parse(localStorage.getItem("wantToGoUsers") || "{}")
-
-    setIsWantToGo(!!wantToGoUsers[`${userId}_${siteId}`])
-
-    const wantToGoTotal = Object.keys(wantToGoUsers)
-      .filter((key) => key.endsWith(`_${siteId}`))
-      .reduce((sum: number, key: string) => sum + (wantToGoUsers[key] ? 1 : 0), 0)
-    setWantToGoCount(Number(wantToGoTotal))
-  }
-
-  const toggleWantToGo = async () => {
     if (loading) return
 
     setLoading(true)
-    try {
-      const userId = localStorage.getItem("uniqueUserId") || ""
-      const wantToGoUsers = JSON.parse(localStorage.getItem("wantToGoUsers") || "{}")
-      const key = `${userId}_${siteId}`
 
-      wantToGoUsers[key] = !wantToGoUsers[key]
-      localStorage.setItem("wantToGoUsers", JSON.stringify(wantToGoUsers))
+    if (wantsToVisit) {
+      const { error } = await supabase
+        .from("user_interactions")
+        .delete()
+        .match({ user_id: user.id, site_id: siteId, interaction_type: "want_to_go" })
 
-      setIsWantToGo(wantToGoUsers[key])
-
-      const newCount = Object.keys(wantToGoUsers)
-        .filter((k) => k.endsWith(`_${siteId}`))
-        .reduce((sum: number, k: string) => sum + (wantToGoUsers[k] ? 1 : 0), 0)
-      setWantToGoCount(Number(newCount))
-
-      if (wantToGoUsers[key]) {
-        toast.success("Added to Want to Go")
+      if (error) {
+        toast.error("Failed to update wishlist.")
+        console.error("Error deleting interaction:", error)
       } else {
-        toast.success("Removed from Want to Go")
+        setWantsToVisit(false)
+        setWantToVisitCount((prev) => Math.max(0, prev - 1))
+        toast.success("Removed from 'Want to Go'.")
       }
-    } catch (error) {
-      console.error("Error toggling want to go:", error)
-      toast.error("Failed to update want to go")
-    } finally {
-      setLoading(false)
+    } else {
+      const { error } = await supabase
+        .from("user_interactions")
+        .insert({ user_id: user.id, site_id: siteId, interaction_type: "want_to_go" })
+
+      if (error) {
+        toast.error("Failed to update wishlist.")
+        console.error("Error inserting interaction:", error)
+      } else {
+        setWantsToVisit(true)
+        setWantToVisitCount((prev) => prev + 1)
+        toast.success("Added to 'Want to Go'!")
+      }
     }
+    setLoading(false)
   }
 
   return (
     <div
       className={`aspect-square w-10 h-10 rounded-full bg-cream shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal ${className || ""}`}
-      onClick={toggleWantToGo}
+      onClick={toggleWantToVisit}
     >
       <Star
         size={20}
         className={`${
-          isWantToGo ? "text-teal dark:text-teal" : "text-brown"
+          wantsToVisit ? "text-teal dark:text-teal" : "text-brown"
         } group-hover:text-white transition-colors ${loading ? "opacity-50" : ""}`}
       />
       <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-        Want to Go ({wantToGoCount})
+        Want to Go ({wantToVisitCount})
       </div>
     </div>
   )
