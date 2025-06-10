@@ -152,7 +152,7 @@ export default function SitePage({ params }: { params: { slug: string } }) {
               </div>
             )}
 
-            <div className="p-6 rounded-lg shadow-lg bg-[#EDE4D3]">
+            <div className="p-6 rounded-lg shadow-lg bg-[#f8f0e3] dark:bg-dark-secondary-bg">
               <h3 className="text-xl font-bold text-brown dark:text-dark-text-primary mb-3 font-['Cinzel'] flex items-center">
                 <Layers size={20} className="mr-2 theme-accent-text" />
                 Site Category
