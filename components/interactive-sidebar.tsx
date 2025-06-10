@@ -237,35 +237,43 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
       url: window.location.href,
     }
 
-    if (navigator.share) {
+    // Check if Web Share API is supported and available
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
       try {
         await navigator.share(shareData)
-        // Success toast is optional, browser usually shows feedback
+        // Success - no toast needed as browser provides feedback
       } catch (error) {
         console.error("Web Share API failed:", error)
-        // Check if the error is an AbortError (user cancelled)
-        if (error instanceof DOMException && error.name === "AbortError") {
-          // User cancelled the share operation, no toast needed
-        } else {
-          // Fallback for other errors (e.g., NotAllowedError)
-          try {
-            await navigator.clipboard.writeText(shareData.url)
-            toast.info("Sharing failed, link copied to clipboard!")
-          } catch (copyError) {
-            console.error("Failed to copy to clipboard:", copyError)
-            toast.error("Sharing and copying to clipboard failed.")
+        // Handle specific error types
+        if (error instanceof DOMException) {
+          if (error.name === "AbortError") {
+            // User cancelled the share operation, no action needed
+            return
+          } else if (error.name === "NotAllowedError") {
+            // Permission denied, fall back to clipboard
+            fallbackToClipboard(shareData.url)
+          } else {
+            // Other DOMException errors
+            fallbackToClipboard(shareData.url)
           }
+        } else {
+          // Non-DOMException errors
+          fallbackToClipboard(shareData.url)
         }
       }
     } else {
-      // Fallback if navigator.share is not supported at all
-      try {
-        await navigator.clipboard.writeText(shareData.url)
-        toast.success("Link copied to clipboard!")
-      } catch (copyError) {
-        console.error("Failed to copy to clipboard:", copyError)
-        toast.error("Could not copy link to clipboard.")
-      }
+      // Web Share API not supported or data not shareable
+      fallbackToClipboard(shareData.url)
+    }
+  }
+
+  const fallbackToClipboard = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url)
+      toast.success("Link copied to clipboard!")
+    } catch (copyError) {
+      console.error("Failed to copy to clipboard:", copyError)
+      toast.error("Could not copy link to clipboard.")
     }
   }
 
