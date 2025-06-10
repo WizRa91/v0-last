@@ -25,6 +25,18 @@ export const sitesData: Site[] = [
         caption: "Al-Khazneh, The Treasury at Petra",
         type: "image",
       },
+      {
+        src: "/images/petra-monastery.png",
+        alt: "The Monastery at Petra",
+        caption: "Ad Deir, The Monastery, Petra",
+        type: "image",
+      },
+      {
+        src: "/images/petra-siq.png",
+        alt: "The Siq, entrance to Petra",
+        caption: "The Siq, the main entrance to Petra",
+        type: "image",
+      },
     ],
     tags: ["Nabataean", "UNESCO", "Desert City", "Archaeology"],
     article_url: "/sites/petra",
