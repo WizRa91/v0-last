@@ -2,20 +2,19 @@
 
 import { useState, useEffect, createContext, useContext, type ReactNode } from "react"
 import type { SupabaseClient, User, AuthChangeEvent, Session } from "@supabase/supabase-js"
-import { supabase } from "@/lib/supabase/client" // Ensure this path is correct
+import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
-import { useToast } from "@/components/ui/use-toast" // Assuming you have this
+import { useToast } from "@/components/ui/use-toast"
 
 interface AuthContextType {
   supabase: SupabaseClient
   user: User | null
   profile: Profile | null
-  loading: boolean
   signInWithEmail: (email: string, password: string) => Promise<any>
   signInWithGoogle: () => Promise<any>
   signUpWithEmail: (email: string, password: string, fullName: string, username?: string) => Promise<any>
   signOut: () => Promise<any>
-  isUserLoading: boolean // Renamed from loading to avoid conflict
+  isUserLoading: boolean
 }
 
 interface Profile {
@@ -24,7 +23,6 @@ interface Profile {
   full_name?: string
   avatar_url?: string
   website?: string
-  // Add other profile fields as needed
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -37,7 +35,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast()
 
   useEffect(() => {
-    setIsUserLoading(true)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
@@ -50,7 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsUserLoading(false)
     })
 
-    // Check initial session
     const checkInitialSession = async () => {
       const {
         data: { session },
@@ -81,44 +77,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const signInWithEmail = async (email: string, password: string) => {
-    setIsUserLoading(true)
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
       toast({ title: "Success", description: "Signed in successfully!" })
-      // User state will be updated by onAuthStateChange
     } catch (error: any) {
       console.error("Error signing in with email:", error.message)
       toast({ title: "Sign In Error", description: error.message, variant: "destructive" })
       throw error
-    } finally {
-      setIsUserLoading(false)
     }
   }
 
   const signInWithGoogle = async () => {
-    setIsUserLoading(true)
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`, // Ensure this callback route is handled
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       })
       if (error) throw error
-      // User will be redirected to Google, then back to callback.
-      // User state will be updated by onAuthStateChange after callback.
     } catch (error: any) {
       console.error("Error signing in with Google:", error.message)
       toast({ title: "Google Sign In Error", description: error.message, variant: "destructive" })
       throw error
-    } finally {
-      //setIsUserLoading(false); // Loading might persist until redirect or callback
     }
   }
 
   const signUpWithEmail = async (email: string, password: string, fullName: string, username?: string) => {
-    setIsUserLoading(true)
     try {
       const {
         data: { user },
@@ -129,48 +115,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         options: {
           data: {
             full_name: fullName,
-            // username: username, // Supabase auth.signUp options.data is for user_metadata
-            // username should be handled post-signup by updating the profiles table
-            // or ensure your handle_new_user trigger can parse it if you pass it here.
           },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
       if (error) throw error
       if (user && username) {
-        // If username is provided, update profile
         const { error: profileError } = await supabase
           .from("profiles")
-          .update({ username, full_name: fullName }) // Also ensure full_name is set if trigger missed it
+          .update({ username, full_name: fullName })
           .eq("id", user.id)
         if (profileError) console.warn("Error setting username post-signup:", profileError.message)
       }
       toast({ title: "Sign Up Successful", description: "Please check your email to confirm your account." })
-      // User state will be updated by onAuthStateChange after email confirmation
     } catch (error: any) {
       console.error("Error signing up:", error.message)
       toast({ title: "Sign Up Error", description: error.message, variant: "destructive" })
       throw error
-    } finally {
-      setIsUserLoading(false)
     }
   }
 
   const signOut = async () => {
-    setIsUserLoading(true)
     try {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       setUser(null)
       setProfile(null)
       toast({ title: "Signed Out", description: "You have been successfully signed out." })
-      router.push("/") // Redirect to home page after sign out
+      router.push("/")
     } catch (error: any) {
       console.error("Error signing out:", error.message)
       toast({ title: "Sign Out Error", description: error.message, variant: "destructive" })
       throw error
-    } finally {
-      setIsUserLoading(false)
     }
   }
 
@@ -178,7 +154,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase,
     user,
     profile,
-    loading: isUserLoading, // Use the renamed state
     signInWithEmail,
     signInWithGoogle,
     signUpWithEmail,
