@@ -1,70 +1,95 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Bookmark } from "lucide-react"
 import { toast } from "sonner"
+import { useAuth } from "@/hooks/useAuth"
 import type { InteractiveButtonProps } from "./types"
 
 export function BookmarkButton({ siteId, className }: InteractiveButtonProps) {
+  const { user, supabase } = useAuth()
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [bookmarkCount, setBookmarkCount] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  const fetchInteractionState = useCallback(async () => {
+    setLoading(true)
+    // Fetch total count
+    const { count, error: countError } = await supabase
+      .from("user_interactions")
+      .select("*", { count: "exact", head: true })
+      .eq("site_id", siteId)
+      .eq("interaction_type", "bookmark")
+
+    if (countError) {
+      console.error("Error fetching bookmark count:", countError)
+    } else {
+      setBookmarkCount(count || 0)
+    }
+
+    // Fetch user-specific interaction
+    if (user) {
+      const { data: userData, error: userError } = await supabase
+        .from("user_interactions")
+        .select("id")
+        .eq("site_id", siteId)
+        .eq("user_id", user.id)
+        .eq("interaction_type", "bookmark")
+        .maybeSingle()
+
+      if (userError) {
+        console.error("Error fetching user bookmark:", userError)
+      } else {
+        setIsBookmarked(!!userData)
+      }
+    } else {
+      setIsBookmarked(false)
+    }
+    setLoading(false)
+  }, [supabase, siteId, user])
 
   useEffect(() => {
-    // For demo purposes, we'll use localStorage
-    handleLocalStorage()
-  }, [siteId])
-
-  const handleLocalStorage = () => {
-    if (!localStorage.getItem("bookmarkUsers")) {
-      localStorage.setItem("bookmarkUsers", JSON.stringify({}))
-    }
-
-    if (!localStorage.getItem("uniqueUserId")) {
-      localStorage.setItem("uniqueUserId", "user_" + Date.now())
-    }
-    const userId = localStorage.getItem("uniqueUserId") || ""
-
-    const bookmarkUsers = JSON.parse(localStorage.getItem("bookmarkUsers") || "{}")
-
-    setIsBookmarked(!!bookmarkUsers[`${userId}_${siteId}`])
-
-    const bookmarkTotal = Object.keys(bookmarkUsers)
-      .filter((key) => key.endsWith(`_${siteId}`))
-      .reduce((sum: number, key: string) => sum + (bookmarkUsers[key] ? 1 : 0), 0)
-    setBookmarkCount(Number(bookmarkTotal))
-  }
+    fetchInteractionState()
+  }, [fetchInteractionState])
 
   const toggleBookmark = async () => {
+    if (!user) {
+      toast.info("Please sign in to bookmark sites.")
+      return
+    }
     if (loading) return
 
     setLoading(true)
-    try {
-      const userId = localStorage.getItem("uniqueUserId") || ""
-      const bookmarkUsers = JSON.parse(localStorage.getItem("bookmarkUsers") || "{}")
-      const key = `${userId}_${siteId}`
 
-      bookmarkUsers[key] = !bookmarkUsers[key]
-      localStorage.setItem("bookmarkUsers", JSON.stringify(bookmarkUsers))
+    if (isBookmarked) {
+      const { error } = await supabase
+        .from("user_interactions")
+        .delete()
+        .match({ user_id: user.id, site_id: siteId, interaction_type: "bookmark" })
 
-      setIsBookmarked(bookmarkUsers[key])
-
-      const newCount = Object.keys(bookmarkUsers)
-        .filter((k) => k.endsWith(`_${siteId}`))
-        .reduce((sum: number, k: string) => sum + (bookmarkUsers[k] ? 1 : 0), 0)
-      setBookmarkCount(Number(newCount))
-
-      if (bookmarkUsers[key]) {
-        toast.success("Added to bookmarks")
+      if (error) {
+        toast.error("Failed to update bookmarks.")
+        console.error("Error deleting bookmark:", error)
       } else {
-        toast.success("Removed from bookmarks")
+        setIsBookmarked(false)
+        setBookmarkCount((prev) => Math.max(0, prev - 1))
+        toast.success("Removed from bookmarks.")
       }
-    } catch (error) {
-      console.error("Error toggling bookmark:", error)
-      toast.error("Failed to update bookmark")
-    } finally {
-      setLoading(false)
+    } else {
+      const { error } = await supabase
+        .from("user_interactions")
+        .insert({ user_id: user.id, site_id: siteId, interaction_type: "bookmark" })
+
+      if (error) {
+        toast.error("Failed to update bookmarks.")
+        console.error("Error inserting bookmark:", error)
+      } else {
+        setIsBookmarked(true)
+        setBookmarkCount((prev) => prev + 1)
+        toast.success("Added to bookmarks!")
+      }
     }
+    setLoading(false)
   }
 
   return (
