@@ -49,8 +49,8 @@ export function Footer() {
 
   return (
     <footer className="w-full theme-footer-bg theme-text transition-colors duration-300">
-      <div className="w-full px-4 py-12 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div className="w-full px-[5%] py-12">
+        <div className="w-full grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
             <h2 className="mb-4 text-3xl font-bold tracking-tight theme-text">Stay Connected</h2>
             <p className="mb-6 theme-secondary-text">
@@ -164,7 +164,7 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row theme-border">
+        <div className="w-full mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row theme-border">
           <p className="text-sm theme-secondary-text">© 2025 Archaic Knowledge. All rights reserved.</p>
           <nav className="flex gap-4 text-sm">
             <a href="#" className="transition-colors theme-nav-link hover:theme-accent-text">
