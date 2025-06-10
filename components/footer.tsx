@@ -99,7 +99,7 @@ export function Footer() {
             </address>
           </div>
           <div className="relative md:col-start-4 flex flex-col items-end">
-            <h3 className="mb-4 text-lg font-semibold theme-text self-start">Follow Us</h3>
+            <h3 className="mb-4 text-lg font-semibold theme-text">Follow Us</h3>
             <div className="mb-6 flex space-x-4 self-end">
               <TooltipProvider>
                 <Tooltip>
