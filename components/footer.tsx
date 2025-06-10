@@ -48,8 +48,8 @@ export function Footer() {
   }
 
   return (
-    <footer className="w-full theme-footer-bg theme-text transition-colors duration-300">
-      <div className="w-full px-[2.5%] py-12">
+    <footer className="w-full bg-[#333333] theme-footer-bg theme-text transition-colors duration-300">
+      <div className="w-full px-[4%] py-12">
         <div className="w-full grid gap-12 grid-cols-1 md:grid-cols-4 lg:grid-cols-4">
           <div className="relative md:col-span-1">
             <h2 className="mb-4 text-3xl font-bold tracking-tight theme-text">Stay Connected</h2>
