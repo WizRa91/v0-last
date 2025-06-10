@@ -11,7 +11,7 @@ export const TagSection = ({ tags, onTagClick }: TagSectionProps) => {
   }
 
   return (
-    <div className="theme-secondary-bg p-8 rounded-2xl shadow-lg mt-8">
+    <div className="bg-[#f5f0e5] dark:bg-dark-secondary-bg p-8 rounded-2xl shadow-lg mt-8">
       <h2 className="text-3xl font-bold mb-5 theme-text">Related Tags</h2>
       <div className="flex flex-wrap gap-3">
         {tags.map((tag, index) => (

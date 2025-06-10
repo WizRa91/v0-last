@@ -65,7 +65,7 @@ export const LocationSidebar = ({ location, onMapClick }: LocationSidebarProps) 
 
   return (
     <>
-      <div className="bg-[#f8f3e9] dark:bg-dark-secondary-bg rounded-2xl shadow-lg overflow-hidden">
+      <div className="bg-[#f5f0e5] dark:bg-dark-secondary-bg rounded-2xl shadow-lg overflow-hidden">
         <div
           ref={mapRef}
           className="w-full h-[400px] relative cursor-pointer transition-all duration-300 ease-in-out hover:opacity-95"
