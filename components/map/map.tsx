@@ -1,11 +1,24 @@
 "use client"
 
-export function Map() {
+const MapComponent = () => {
   return (
-    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-      <p className="text-gray-500">Map Component Placeholder</p>
+    <div
+      style={{
+        height: "400px",
+        width: "100%",
+        backgroundColor: "#f0f0f0",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#333",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+      }}
+    >
+      <p>Map Placeholder</p>
     </div>
   )
 }
 
-export default Map
+export { MapComponent as Map }
+export default MapComponent

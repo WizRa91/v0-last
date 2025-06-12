@@ -1,7 +1,16 @@
-export function ProfileHeader() {
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+export const ProfileHeader = () => {
   return (
-    <header className="bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700">
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Profile Header Placeholder</h1>
-    </header>
+    <div className="flex items-center gap-4 p-4 border-b">
+      <Avatar>
+        <AvatarImage src="/placeholder-user.jpg" alt="User" />
+        <AvatarFallback>U</AvatarFallback>
+      </Avatar>
+      <div>
+        <h2 className="text-lg font-semibold">User Name</h2>
+        <p className="text-sm text-muted-foreground">user.email@example.com</p>
+      </div>
+    </div>
   )
 }

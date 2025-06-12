@@ -25,7 +25,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-cream text-cream hover:bg-cream hover:text-brown text-lg px-8 py-4 bg-slate-700"
+                className="border-cream text-cream hover:bg-cream hover:text-brown text-lg px-8 py-4"
               >
                 <BookOpen className="mr-2 h-5 w-5" />
                 Learn More
