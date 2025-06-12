@@ -353,12 +353,11 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                         <Globe className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <h1 className="font-['Cinzel'] text-xl font-bold theme-text">Ar</h1>
-                        <p className="font-['Cinzel'] text-xl font-bold theme-text">Interactive World Map</p>
+                        
+                        
                       </div>
-                    </div>
-                    <div className="theme-text text-sm leading-relaxed font-['Montserrat']">
-                      <p className={`${!isUpperExpanded ? "line-clamp-3" : ""}`}>
+      Ar            </div>
+                              <p className={`${!isUpperExpanded ? "line-clamp-3" : ""}`}>
                         Discover remarkable ancient sites, mysterious formations, and archaeological wonders from around
                         the world. Our interactive map features carefully curated locations with detailed information
                         about each site's history, significance, and current research.
