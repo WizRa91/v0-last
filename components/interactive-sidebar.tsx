@@ -353,8 +353,8 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                         <Globe className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <h1 className="font-['Cinzel'] text-xl font-bold theme-text">Ancient Sites Explorer</h1>
-                        <p className="text-sm theme-secondary-text font-['Montserrat']">Interactive World Map</p>
+                        <h1 className="font-['Cinzel'] text-xl font-bold theme-text">Ar</h1>
+                        <p className="font-['Cinzel'] text-xl font-bold theme-text">Interactive World Map</p>
                       </div>
                     </div>
                     <div className="theme-text text-sm leading-relaxed font-['Montserrat']">
