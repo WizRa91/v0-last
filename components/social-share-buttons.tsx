@@ -35,7 +35,7 @@ export const SocialShareButtons = ({ url, title }: SocialShareButtonsProps) => {
   return (
     <div className="flex items-center space-x-3">
       <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
+        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-[#4A7A7A] dark:hover:bg-[#4A7A7A]"
         onClick={shareToFacebook}
       >
         <Facebook
@@ -48,7 +48,7 @@ export const SocialShareButtons = ({ url, title }: SocialShareButtonsProps) => {
       </div>
 
       <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
+        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-[#4A7A7A] dark:hover:bg-[#4A7A7A]"
         onClick={shareToInstagram}
       >
         <Instagram
@@ -61,7 +61,7 @@ export const SocialShareButtons = ({ url, title }: SocialShareButtonsProps) => {
       </div>
 
       <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
+        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-[#4A7A7A] dark:hover:bg-[#4A7A7A]"
         onClick={shareToTelegram}
       >
         <Send
@@ -74,7 +74,7 @@ export const SocialShareButtons = ({ url, title }: SocialShareButtonsProps) => {
       </div>
 
       <div
-        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal dark:hover:bg-dark-hover-teal"
+        className="aspect-square w-10 h-10 rounded-full bg-cream dark:bg-dark-accent shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-[#4A7A7A] dark:hover:bg-[#4A7A7A]"
         onClick={shareToTwitter}
       >
         <Twitter

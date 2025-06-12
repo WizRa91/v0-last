@@ -26,7 +26,7 @@ export function QuizButton({ siteId, siteName, className }: InteractiveButtonPro
   return (
     <>
       <div
-        className={`aspect-square w-10 h-10 rounded-full bg-cream shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-teal ${className || ""}`}
+        className={`aspect-square w-10 h-10 rounded-full bg-cream shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group hover:bg-[#4A7A7A] ${className || ""}`}
         onClick={handleOpenQuiz}
       >
         <BookText size={20} className="text-brown group-hover:text-white transition-colors" />

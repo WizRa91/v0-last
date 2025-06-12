@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css"
 import { useRouter } from "next/navigation"
 import "../../styles/map-styles.css"
 import type { Site } from "./types" // Import the updated Site type
+import MapPinPopup from "../map-pin-popup"
 
 // Fix for default markers in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -290,22 +291,7 @@ export default function IntegratedMap({ searchText, activeCategory, onSiteSelect
             }}
           >
             <Popup>
-              <div className="site-popup">
-                <img src={site.cover_image || "/placeholder.svg"} alt={site.name} className="site-popup-image" />
-                <div className="site-popup-content">
-                  <h3 className="site-popup-title">{site.name}</h3>
-                  {site.blurb && (
-                    <p className="site-popup-description">
-                      {site.blurb.length > 100 ? `${site.blurb.substring(0, 100)}...` : site.blurb}
-                    </p>
-                  )}
-                  <div className="site-popup-footer">
-                    <button onClick={() => handleReadMore(site.slug)} className="site-popup-button">
-                      Read More
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <MapPinPopup site={site} onReadMore={handleReadMore} />
             </Popup>
           </Marker>
         ))}

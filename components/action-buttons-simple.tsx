@@ -1,12 +1,14 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Flag, Star, Bookmark, BookText } from "lucide-react"
 import { toast } from "sonner"
 import { QuizModal } from "./quiz-modal"
 import { NotesButton } from "./interactive-buttons/notes-button"
+import { RebusButton } from "./interactive-buttons/rebus-button"
+import { RebusModal } from "./rebus-modal"
+import { getRebusForSite } from "@/data/site-rebuses"
 
 interface ActionButtonsSimpleProps {
   siteId: string
@@ -16,6 +18,7 @@ interface ActionButtonsSimpleProps {
 
 export const ActionButtonsSimple = ({ siteId, siteName, onOpenQuizModal }: ActionButtonsSimpleProps) => {
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false)
+  const [isRebusModalOpen, setIsRebusModalOpen] = useState(false)
   const [quizCount, setQuizCount] = useState(0)
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [bookmarkCount, setBookmarkCount] = useState(0)
@@ -24,6 +27,8 @@ export const ActionButtonsSimple = ({ siteId, siteName, onOpenQuizModal }: Actio
   const [isWantToGo, setIsWantToGo] = useState(false)
   const [wantToGoCount, setWantToGoCount] = useState(0)
   const [loading, setLoading] = useState({ bookmark: false, beenHere: false, wantToGo: false })
+
+  const rebusForSite = getRebusForSite(siteId)
 
   useEffect(() => {
     handleLocalStorage()
@@ -76,10 +81,12 @@ export const ActionButtonsSimple = ({ siteId, siteName, onOpenQuizModal }: Actio
     setQuizCount((p) => p + 1)
   }
 
+  const openRebusModal = () => setIsRebusModalOpen(true)
+  const closeRebusModal = () => setIsRebusModalOpen(false)
+
   const createToggleHandler =
     (
       type: "bookmark" | "beenHere" | "wantToGo",
-      setLoadingState: React.Dispatch<React.SetStateAction<boolean>>,
       localStorageKey: string,
       setIsState: React.Dispatch<React.SetStateAction<boolean>>,
       setCountState: React.Dispatch<React.SetStateAction<number>>,
@@ -110,83 +117,76 @@ export const ActionButtonsSimple = ({ siteId, siteName, onOpenQuizModal }: Actio
 
   const toggleBookmark = createToggleHandler(
     "bookmark",
-    (val) => setLoading((p) => ({ ...p, bookmark: val })),
     "bookmarkUsers",
     setIsBookmarked,
     setBookmarkCount,
     "bookmarks",
   )
-  const toggleBeenHere = createToggleHandler(
-    "beenHere",
-    (val) => setLoading((p) => ({ ...p, beenHere: val })),
-    "beenHereUsers",
-    setIsBeenHere,
-    setBeenHereCount,
-    "Been Here",
-  )
-  const toggleWantToGo = createToggleHandler(
-    "wantToGo",
-    (val) => setLoading((p) => ({ ...p, wantToGo: val })),
-    "wantToGoUsers",
-    setIsWantToGo,
-    setWantToGoCount,
-    "Want to Go",
-  )
+  const toggleBeenHere = createToggleHandler("beenHere", "beenHereUsers", setIsBeenHere, setBeenHereCount, "Been Here")
+  const toggleWantToGo = createToggleHandler("wantToGo", "wantToGoUsers", setIsWantToGo, setWantToGoCount, "Want to Go")
 
   const buttonBaseClass =
     "aspect-square w-10 h-10 rounded-full shadow-md flex items-center justify-center cursor-pointer hover:scale-110 transition-all relative group"
   const lightBg = "bg-cream"
   const darkBg = "dark:bg-dark-accent"
-  const lightHoverBg = "hover:bg-teal" // Original teal
-  const darkHoverBg = "dark:hover:bg-dark-hover-teal" // New specific teal
+  const lightHoverBg = "hover:bg-[#4A7A7A]"
+  const darkHoverBg = "dark:hover:bg-[#4A7A7A]"
   const iconLightText = "text-brown"
   const iconDarkText = "dark:text-dark-text-secondary"
   const iconHoverText = "group-hover:text-white dark:group-hover:text-dark-text-primary"
   const tooltipBg = "bg-black dark:bg-dark-secondary-bg"
   const tooltipText = "text-white dark:text-dark-text-primary"
 
+  const buttons = [
+    {
+      id: "quiz",
+      Icon: BookText,
+      action: openQuizModal,
+      count: quizCount,
+      label: "Quiz",
+      active: false,
+      loadingState: false,
+    },
+    rebusForSite && {
+      id: "rebus",
+      isComponent: true,
+      Component: RebusButton,
+      props: { onClick: openRebusModal },
+    },
+    { id: "notes", isComponent: true, Component: NotesButton, props: { siteSlug: siteId } },
+    {
+      id: "bookmark",
+      Icon: Bookmark,
+      action: toggleBookmark,
+      count: bookmarkCount,
+      label: "Bookmark",
+      active: isBookmarked,
+      loadingState: loading.bookmark,
+    },
+    {
+      id: "beenHere",
+      Icon: Flag,
+      action: toggleBeenHere,
+      count: beenHereCount,
+      label: "Been Here",
+      active: isBeenHere,
+      loadingState: loading.beenHere,
+    },
+    {
+      id: "wantToGo",
+      Icon: Star,
+      action: toggleWantToGo,
+      count: wantToGoCount,
+      label: "Want to Go",
+      active: isWantToGo,
+      loadingState: loading.wantToGo,
+    },
+  ].filter(Boolean) // Filter out the rebus button if it's null
+
   return (
     <>
       <div className="flex items-center space-x-3">
-        {[
-          {
-            id: "quiz",
-            Icon: BookText,
-            action: openQuizModal,
-            count: quizCount,
-            label: "Quiz",
-            active: false,
-            loadingState: false,
-          },
-          { id: "notes", isComponent: true, Component: NotesButton, props: { siteSlug: siteId } },
-          {
-            id: "bookmark",
-            Icon: Bookmark,
-            action: toggleBookmark,
-            count: bookmarkCount,
-            label: "Bookmark",
-            active: isBookmarked,
-            loadingState: loading.bookmark,
-          },
-          {
-            id: "beenHere",
-            Icon: Flag,
-            action: toggleBeenHere,
-            count: beenHereCount,
-            label: "Been Here",
-            active: isBeenHere,
-            loadingState: loading.beenHere,
-          },
-          {
-            id: "wantToGo",
-            Icon: Star,
-            action: toggleWantToGo,
-            count: wantToGoCount,
-            label: "Want to Go",
-            active: isWantToGo,
-            loadingState: loading.wantToGo,
-          },
-        ].map((btn) =>
+        {buttons.map((btn) =>
           btn.isComponent && btn.Component ? (
             <btn.Component key={btn.id} {...btn.props} />
           ) : (
@@ -210,6 +210,9 @@ export const ActionButtonsSimple = ({ siteId, siteName, onOpenQuizModal }: Actio
       </div>
       {isQuizModalOpen && (
         <QuizModal isOpen={isQuizModalOpen} onClose={closeQuizModal} siteId={siteId} siteName={siteName} />
+      )}
+      {isRebusModalOpen && siteName && (
+        <RebusModal isOpen={isRebusModalOpen} onClose={closeRebusModal} siteId={siteId} siteName={siteName} />
       )}
     </>
   )

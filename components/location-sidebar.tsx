@@ -65,7 +65,7 @@ export const LocationSidebar = ({ location, onMapClick }: LocationSidebarProps) 
 
   return (
     <>
-      <div className="bg-white dark:bg-dark-secondary-bg rounded-2xl shadow-lg overflow-hidden">
+      <div className="bg-[#f5f0e5] dark:bg-dark-secondary-bg rounded-2xl shadow-lg overflow-hidden">
         <div
           ref={mapRef}
           className="w-full h-[400px] relative cursor-pointer transition-all duration-300 ease-in-out hover:opacity-95"
@@ -73,32 +73,30 @@ export const LocationSidebar = ({ location, onMapClick }: LocationSidebarProps) 
         ></div>
         <div className="p-5">
           <div
-            className="relative flex items-start gap-3 p-3 cursor-pointer border-2 border-transparent rounded-lg transition-all duration-200 hover:border-teal/30 dark:hover:border-dark-hover-teal/30 hover:bg-teal/10 dark:hover:bg-dark-hover-teal/10 group"
+            className="relative flex items-start gap-3 p-3 cursor-pointer border-2 border-transparent rounded-lg transition-all duration-200 hover:border-[var(--custom-accent)]/30 hover:bg-[var(--custom-accent)]/10 group"
             onClick={(e) => copyToClipboard(location.address.replace(/\n/g, ", "), e.currentTarget)}
           >
-            <div className="text-teal dark:text-dark-hover-teal mt-1">📍</div>
-            <div className="text-brown dark:text-dark-text-primary text-base whitespace-pre-line font-medium">
-              {location.address}
-            </div>
+            <div className="theme-accent-text mt-1">📍</div>
+            <div className="theme-text text-base whitespace-pre-line font-medium">{location.address}</div>
             <div className="absolute right-3 flex flex-col items-center gap-1 text-brown dark:text-dark-text-secondary text-sm opacity-0 translate-y-1 transition-all duration-200 whitespace-nowrap group-hover:opacity-100 group-hover:translate-y-0">
               copy
-              <div className="text-xl p-2 rounded transition-all duration-200 hover:bg-teal/20 dark:hover:bg-dark-hover-teal/20 hover:text-teal dark:hover:text-dark-hover-teal">
+              <div className="text-xl p-2 rounded transition-all duration-200 hover:bg-[var(--custom-accent)]/20 hover:text-[var(--custom-accent)]">
                 📋
               </div>
             </div>
           </div>
 
           <div
-            className="relative flex items-start gap-3 p-3 cursor-pointer border-2 border-transparent rounded-lg transition-all duration-200 hover:border-teal/30 dark:hover:border-dark-hover-teal/30 hover:bg-teal/10 dark:hover:bg-dark-hover-teal/10 group"
+            className="relative flex items-start gap-3 p-3 cursor-pointer border-2 border-transparent rounded-lg transition-all duration-200 hover:border-[var(--custom-accent)]/30 hover:bg-[var(--custom-accent)]/10 group"
             onClick={(e) => copyToClipboard(`${location.coordinates[0]}, ${location.coordinates[1]}`, e.currentTarget)}
           >
-            <div className="text-teal dark:text-dark-hover-teal mt-1">🌍</div>
-            <div className="text-brown dark:text-dark-text-primary text-base font-mono">
+            <div className="theme-accent-text mt-1">🌍</div>
+            <div className="theme-text text-base font-mono">
               {location.coordinates[0]}, {location.coordinates[1]}
             </div>
             <div className="absolute right-3 flex flex-col items-center gap-1 text-brown dark:text-dark-text-secondary text-sm opacity-0 translate-y-1 transition-all duration-200 whitespace-nowrap group-hover:opacity-100 group-hover:translate-y-0">
               copy
-              <div className="text-xl p-2 rounded transition-all duration-200 hover:bg-teal/20 dark:hover:bg-dark-hover-teal/20 hover:text-teal dark:hover:text-dark-hover-teal">
+              <div className="text-xl p-2 rounded transition-all duration-200 hover:bg-[var(--custom-accent)]/20 hover:text-[var(--custom-accent)]">
                 📋
               </div>
             </div>
@@ -108,7 +106,7 @@ export const LocationSidebar = ({ location, onMapClick }: LocationSidebarProps) 
             href={location.directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full bg-teal hover:bg-teal-dark dark:bg-dark-hover-teal dark:hover:opacity-80 text-white dark:text-dark-text-primary py-3 px-5 text-center rounded-lg text-base cursor-pointer mt-4 transition-all duration-300 shadow-lg font-medium"
+            className="block w-full theme-button theme-directions-button py-3 px-5 text-center rounded-lg text-base cursor-pointer mt-4 transition-all duration-300 shadow-lg font-medium"
           >
             🧭 Get Directions
           </a>
@@ -118,7 +116,7 @@ export const LocationSidebar = ({ location, onMapClick }: LocationSidebarProps) 
               href={location.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full bg-brown hover:bg-brown-dark dark:bg-dark-accent dark:hover:bg-dark-hover-teal text-cream-light dark:text-dark-text-primary py-3 px-5 text-center rounded-lg text-base cursor-pointer mt-2 transition-all duration-300 shadow-lg font-medium"
+              className="block w-full theme-button bg-[var(--custom-text)] hover:bg-[var(--custom-accent)] text-[var(--custom-button-text)] dark:bg-dark-accent dark:hover:bg-dark-hover-teal py-3 px-5 text-center rounded-lg text-base cursor-pointer mt-2 transition-all duration-300 shadow-lg font-medium"
             >
               🌐 Official Website
             </a>
@@ -129,14 +127,14 @@ export const LocationSidebar = ({ location, onMapClick }: LocationSidebarProps) 
         .custom-marker-icon { background: transparent; border: none; }
         .marker-pin {
           width: 30px; height: 30px; border-radius: 50% 50% 50% 0;
-          background: #5F9EA0; /* Use new teal for marker pin */
+          background: var(--custom-accent); /* Teal */
           position: absolute; transform: rotate(-45deg);
           left: 50%; top: 50%; margin: -15px 0 0 -15px;
-          box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+          box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2); /* Softer shadow for light theme */
         }
         .marker-pin::after {
           content: ""; width: 18px; height: 18px; margin: 6px 0 0 6px;
-          background: #D9D9D9; /* Use dark text primary for inner circle */
+          background: var(--custom-secondary-bg); /* Lighter beige for inner circle */
           position: absolute; border-radius: 50%;
         }
       `}</style>
