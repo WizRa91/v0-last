@@ -2,13 +2,21 @@ import { Suspense } from "react"
 import { Footer } from "@/components/footer"
 import MapLoader from "./map-loader"
 import { getSites } from "@/lib/supabase/queries"
+import { createSupabaseServerClient } from "@/lib/supabase/server"
+import { cookies } from "next/headers"
 
 export default async function MapPage() {
-  const sites = await getSites()
+  // 1. Get the cookie store directly in the Server Component.
+  const cookieStore = cookies()
+
+  // 2. Create the Supabase client here, where context is guaranteed.
+  const supabase = createSupabaseServerClient(cookieStore)
+
+  // 3. Pass the initialized client to the data fetching function.
+  const sites = await getSites(supabase)
 
   return (
     <div className="map-page-wrapper">
-      {/* Full Viewport Map Section */}
       <div className="map-viewport-section">
         <Suspense
           fallback={
@@ -23,8 +31,6 @@ export default async function MapPage() {
           <MapLoader sites={sites} />
         </Suspense>
       </div>
-
-      {/* Footer Section - Below viewport, accessible by scrolling */}
       <Footer />
     </div>
   )
