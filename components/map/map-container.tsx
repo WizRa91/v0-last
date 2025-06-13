@@ -1,15 +1,15 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import dynamic from "next/dynamic"
 import InteractiveSidebar from "../interactive-sidebar"
 import { Home } from "lucide-react"
 import Link from "next/link"
+import type { Site } from "./types"
 
 // Dynamic import for the map component (no SSR)
-const IntegratedMapWithNoSSR = dynamic(() => import("./integrated-map"), {
+const IntegratedMapWithNoSSR = dynamic(() => import("./integrated-map-supabase"), {
   ssr: false,
   loading: () => <MapSkeleton />,
 })
@@ -24,7 +24,11 @@ function MapSkeleton() {
   )
 }
 
-export default function MapContainer() {
+interface MapContainerProps {
+  sites: Site[]
+}
+
+export default function MapContainer({ sites }: MapContainerProps) {
   const [searchText, setSearchText] = useState("")
   const [activeCategory, setActiveCategory] = useState("all")
   const [selectedSite, setSelectedSite] = useState<any>(null)
@@ -45,6 +49,15 @@ export default function MapContainer() {
     // Additional logic can be added here
   }
 
+  const filteredSites = sites.filter((site) => {
+    const searchMatch =
+      searchText === "" ||
+      site.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      site.country.toLowerCase().includes(searchText.toLowerCase())
+    const categoryMatch = activeCategory === "all" || site.categories.includes(activeCategory)
+    return searchMatch && categoryMatch
+  })
+
   return (
     <div className="main-container">
       {/* Sidebar Container - Fixed width */}
@@ -54,8 +67,8 @@ export default function MapContainer() {
           onSearchChange={handleSearchChange}
           activeCategory={activeCategory}
           onCategoryChange={handleCategoryChange}
-          totalSites={12}
-          filteredSites={activeCategory === "all" ? 12 : 5}
+          totalSites={sites.length}
+          filteredSites={filteredSites.length}
         />
       </div>
 
@@ -80,6 +93,7 @@ export default function MapContainer() {
         <div className="map-content">
           <div className="map-wrapper">
             <IntegratedMapWithNoSSR
+              sites={sites}
               searchText={searchText}
               activeCategory={activeCategory}
               onSiteSelect={handleSiteSelect}
@@ -91,8 +105,8 @@ export default function MapContainer() {
         <div className="map-footer">
           <div className="flex justify-between items-center">
             <div className="flex gap-4">
-              <span>Total sites: 12</span>
-              <span>Filtered sites: {activeCategory === "all" ? 12 : 5}</span>
+              <span>Total sites: {sites.length}</span>
+              <span>Filtered sites: {filteredSites.length}</span>
               <span>Auth: Anonymous</span>
             </div>
             <div className="flex gap-4">

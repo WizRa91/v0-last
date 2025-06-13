@@ -1,8 +1,11 @@
 import { Suspense } from "react"
 import { Footer } from "@/components/footer"
 import MapLoader from "./map-loader"
+import { getSites } from "@/lib/supabase/queries"
 
-export default function MapPage() {
+export default async function MapPage() {
+  const sites = await getSites()
+
   return (
     <div className="map-page-wrapper">
       {/* Full Viewport Map Section */}
@@ -17,7 +20,7 @@ export default function MapPage() {
             </div>
           }
         >
-          <MapLoader />
+          <MapLoader sites={sites} />
         </Suspense>
       </div>
 

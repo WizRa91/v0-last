@@ -1,49 +1,59 @@
-"use client"
-import { useUser } from "@auth0/nextjs-auth0/client"
-import { useEffect, useState } from "react"
-import { sitesData } from "@/components/map/site-data"
-import Map from "@/components/map/map"
+"use client";
 
-const WantToGoPage = () => {
-  const { user, isLoading } = useUser()
-  const [siteIds, setSiteIds] = useState<string[]>([])
+import { useState } from 'react';
 
-  useEffect(() => {
-    const fetchUserSites = async () => {
-      if (user) {
-        try {
-          const response = await fetch(`/api/get-user-sites?email=${user.email}`)
-          if (response.ok) {
-            const data = await response.json()
-            setSiteIds(data.sites || [])
-          } else {
-            console.error("Failed to fetch user sites")
-          }
-        } catch (error) {
-          console.error("Error fetching user sites:", error)
-        }
-      }
+export default function WantToGoPage() {
+  const [destinations, setDestinations] = useState<string[]>([]);
+  const [newDestination, setNewDestination] = useState<string>('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewDestination(e.target.value);
+  };
+
+  const handleAddDestination = () => {
+    if (newDestination.trim() !== '') {
+      setDestinations([...destinations, newDestination.trim()]);
+      setNewDestination('');
     }
+  };
 
-    fetchUserSites()
-  }, [user])
-
-  const userSites = sitesData.filter((site) => siteIds.includes(site.slug))
+  const handleRemoveDestination = (index: number) => {
+    const updatedDestinations = [...destinations];
+    updatedDestinations.splice(index, 1);
+    setDestinations(updatedDestinations);
+  };
 
   return (
-    <div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : user ? (
-        <div>
-          <h1>My Want to Go Sites</h1>
-          <Map sites={userSites} />
-        </div>
-      ) : (
-        <div>Please log in to see your want to go sites.</div>
-      )}
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Want to Go</h1>
+      <div className="flex mb-4">
+        <input
+          type="text"
+          placeholder="Add a destination"
+          value={newDestination}
+          onChange={handleInputChange}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        <button
+          onClick={handleAddDestination}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
+          Add
+        </button>
+      </div>
+      <ul>
+        {destinations.map((destination, index) => (
+          <li key={index} className="mb-2 flex items-center">
+            {destination}
+            <button
+              onClick={() => handleRemoveDestination(index)}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2"
+            >
+              Remove
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
-  )
+  );
 }
-
-export default WantToGoPage

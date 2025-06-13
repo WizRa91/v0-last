@@ -1,6 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import type { Site } from "@/components/map/types"
 
 const MapContainerWithNoSSR = dynamic(() => import("@/components/map/map-container"), {
   ssr: false,
@@ -14,6 +15,10 @@ const MapContainerWithNoSSR = dynamic(() => import("@/components/map/map-contain
   ),
 })
 
-export default function MapLoader() {
-  return <MapContainerWithNoSSR />
+interface MapLoaderProps {
+  sites: Site[]
+}
+
+export default function MapLoader({ sites }: MapLoaderProps) {
+  return <MapContainerWithNoSSR sites={sites} />
 }
