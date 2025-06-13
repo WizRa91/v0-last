@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { Footer } from "@/components/footer"
-import MapLoader from "./map-loader"
+import MapClientWrapper from "./map-client-wrapper"
 import { getSites } from "@/lib/supabase/queries"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
@@ -28,7 +28,7 @@ export default async function MapPage() {
             </div>
           }
         >
-          <MapLoader sites={sites} />
+          <MapClientWrapper sites={sites} />
         </Suspense>
       </div>
       <Footer />
