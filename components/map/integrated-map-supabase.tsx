@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from "rea
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { useRouter } from "next/navigation"
-import "../../styles/map-styles.css"
+import "../../styles/map-styles.css" // Adjusted path if styles are in root styles folder
 import type { Site } from "./types"
 import MapPinPopup from "../map-pin-popup"
 
@@ -17,7 +17,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 })
 
-// Custom marker icon
 const ancientSiteIcon = new L.Icon({
   iconUrl:
     "data:image/svg+xml;base64," +
@@ -45,14 +44,17 @@ function MapController({
   const map = useMap()
 
   useEffect(() => {
-    if (selectedSite) {
+    if (selectedSite && selectedSite.latitude && selectedSite.longitude) {
       map.flyTo([selectedSite.latitude, selectedSite.longitude], 8, {
         duration: 1.5,
       })
-    } else if (filteredSites.length > 0) {
-      const bounds = L.latLngBounds(filteredSites.map((site) => [site.latitude, site.longitude]))
-      if (bounds.isValid()) {
-        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 })
+    } else if (filteredSites && filteredSites.length > 0) {
+      const validSitesWithCoords = filteredSites.filter((site) => site.latitude != null && site.longitude != null)
+      if (validSitesWithCoords.length > 0) {
+        const bounds = L.latLngBounds(validSitesWithCoords.map((site) => [site.latitude, site.longitude]))
+        if (bounds.isValid()) {
+          map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 })
+        }
       }
     }
   }, [filteredSites, selectedSite, map])
@@ -61,7 +63,7 @@ function MapController({
 }
 
 interface IntegratedMapProps {
-  sites: Site[]
+  sites: Site[] // Expecting sites to be an array
   searchText: string
   activeCategory: string
   onSiteSelect: (site: Site) => void
@@ -69,8 +71,8 @@ interface IntegratedMapProps {
 
 export default function IntegratedMap({ sites, searchText, activeCategory, onSiteSelect }: IntegratedMapProps) {
   const [mapReady, setMapReady] = useState(false)
-  const [selectedSite, setSelectedSite] = useState<Site | null>(null)
-  const [filteredSites, setFilteredSites] = useState(sites)
+  const [selectedSiteState, setSelectedSiteState] = useState<Site | null>(null) // Renamed to avoid conflict
+  const [filteredSites, setFilteredSites] = useState<Site[]>(Array.isArray(sites) ? sites : []) // Initialize with sites if it's an array
   const router = useRouter()
   const mapRef = useRef<L.Map | null>(null)
 
@@ -79,26 +81,33 @@ export default function IntegratedMap({ sites, searchText, activeCategory, onSit
   }, [])
 
   useEffect(() => {
-    let currentSites = sites
+    // Ensure sites prop is an array before using it
+    if (!Array.isArray(sites)) {
+      setFilteredSites([])
+      return
+    }
+
+    let currentSites = [...sites] // Create a copy to avoid mutating the prop
 
     if (searchText) {
       currentSites = currentSites.filter(
         (site) =>
-          site.name.toLowerCase().includes(searchText.toLowerCase()) ||
+          site.name?.toLowerCase().includes(searchText.toLowerCase()) ||
           (site.blurb && site.blurb.toLowerCase().includes(searchText.toLowerCase())) ||
-          site.country.toLowerCase().includes(searchText.toLowerCase()),
+          site.country?.toLowerCase().includes(searchText.toLowerCase()),
       )
     }
 
     if (activeCategory !== "all") {
-      currentSites = currentSites.filter((site) => site.categories.includes(activeCategory))
+      currentSites = currentSites.filter(
+        (site) => site.categories && Array.isArray(site.categories) && site.categories.includes(activeCategory),
+      )
     }
-
     setFilteredSites(currentSites)
   }, [searchText, activeCategory, sites])
 
   const handleSiteClick = (site: Site) => {
-    setSelectedSite(site)
+    setSelectedSiteState(site)
     onSiteSelect(site)
   }
 
@@ -139,7 +148,10 @@ export default function IntegratedMap({ sites, searchText, activeCategory, onSit
             [85, 180],
           ])
           setTimeout(() => {
-            map.invalidateSize()
+            if (mapRef.current) {
+              // Check if mapRef.current is not null
+              mapRef.current.invalidateSize()
+            }
           }, 100)
         }}
       >
@@ -148,7 +160,7 @@ export default function IntegratedMap({ sites, searchText, activeCategory, onSit
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ZoomControl position="bottomright" />
-        <MapController filteredSites={filteredSites} selectedSite={selectedSite} />
+        <MapController filteredSites={filteredSites} selectedSite={selectedSiteState} />
 
         {filteredSites.map((site) => (
           <Marker
