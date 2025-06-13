@@ -3,13 +3,14 @@
 import type React from "react"
 import { useState } from "react"
 import dynamic from "next/dynamic"
-import InteractiveSidebar from "../interactive-sidebar"
+import InteractiveSidebar from "../interactive-sidebar" // Assuming this path is correct
 import { Home } from "lucide-react"
 import Link from "next/link"
 import type { Site } from "./types"
 
 // Dynamic import for the map component (no SSR)
-const IntegratedMapWithNoSSR = dynamic(() => import("./integrated-map-supabase"), {
+// Using the explicit alias @/ to ensure correct resolution
+const IntegratedMapWithNoSSR = dynamic(() => import("@/components/map/integrated-map-supabase"), {
   ssr: false,
   loading: () => <MapSkeleton />,
 })
@@ -17,9 +18,11 @@ const IntegratedMapWithNoSSR = dynamic(() => import("./integrated-map-supabase")
 // Skeleton loader for the map
 function MapSkeleton() {
   return (
-    <div className="loading-container">
-      <div className="loading-spinner"></div>
-      <p className="loading-text">Loading interactive map...</p>
+    <div className="flex items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-800">
+      <div className="text-center">
+        <div className="w-12 h-12 border-4 border-t-blue-500 rounded-full animate-spin mx-auto mb-3"></div>
+        <p className="text-gray-600 dark:text-gray-400">Loading interactive map...</p>
+      </div>
     </div>
   )
 }
@@ -31,50 +34,46 @@ interface MapContainerProps {
 export default function MapContainer({ sites }: MapContainerProps) {
   const [searchText, setSearchText] = useState("")
   const [activeCategory, setActiveCategory] = useState("all")
-  const [selectedSite, setSelectedSite] = useState<any>(null)
+  const [selectedSite, setSelectedSite] = useState<Site | null>(null)
 
-  // Handle search input changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
   }
 
-  // Handle category selection
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category)
   }
 
-  // Handle site selection from map
-  const handleSiteSelect = (site: any) => {
+  const handleSiteSelect = (site: Site) => {
     setSelectedSite(site)
-    // Additional logic can be added here
   }
 
-  const filteredSites = sites.filter((site) => {
-    const searchMatch =
-      searchText === "" ||
-      site.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      site.country.toLowerCase().includes(searchText.toLowerCase())
-    const categoryMatch = activeCategory === "all" || site.categories.includes(activeCategory)
-    return searchMatch && categoryMatch
-  })
+  const filteredSites = Array.isArray(sites)
+    ? sites.filter((site) => {
+        const searchMatch =
+          searchText === "" ||
+          site.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+          site.country?.toLowerCase().includes(searchText.toLowerCase()) ||
+          site.blurb?.toLowerCase().includes(searchText.toLowerCase())
+        const categoryMatch = activeCategory === "all" || (site.categories && site.categories.includes(activeCategory))
+        return searchMatch && categoryMatch
+      })
+    : []
 
   return (
     <div className="main-container">
-      {/* Sidebar Container - Fixed width */}
       <div className="sidebar-container">
         <InteractiveSidebar
           searchText={searchText}
           onSearchChange={handleSearchChange}
           activeCategory={activeCategory}
           onCategoryChange={handleCategoryChange}
-          totalSites={sites.length}
+          totalSites={Array.isArray(sites) ? sites.length : 0}
           filteredSites={filteredSites.length}
         />
       </div>
 
-      {/* Map Container - Takes remaining space */}
       <div className="map-container">
-        {/* Top Bar */}
         <div className="top-bar">
           <div className="flex items-center gap-4">
             <Link
@@ -89,11 +88,10 @@ export default function MapContainer({ sites }: MapContainerProps) {
           </div>
         </div>
 
-        {/* Map Content with proper container */}
         <div className="map-content">
           <div className="map-wrapper">
             <IntegratedMapWithNoSSR
-              sites={sites}
+              sites={sites} // Pass the original sites array
               searchText={searchText}
               activeCategory={activeCategory}
               onSiteSelect={handleSiteSelect}
@@ -101,17 +99,16 @@ export default function MapContainer({ sites }: MapContainerProps) {
           </div>
         </div>
 
-        {/* Map Footer with Statistics */}
         <div className="map-footer">
           <div className="flex justify-between items-center">
             <div className="flex gap-4">
-              <span>Total sites: {sites.length}</span>
+              <span>Total sites: {Array.isArray(sites) ? sites.length : 0}</span>
               <span>Filtered sites: {filteredSites.length}</span>
-              <span>Auth: Anonymous</span>
+              <span>Auth: Anonymous</span> {/* Placeholder */}
             </div>
             <div className="flex gap-4">
-              <span>Data source: Database</span>
-              <span>Retries: 0</span>
+              <span>Data source: Database</span> {/* Placeholder */}
+              <span>Retries: 0</span> {/* Placeholder */}
               <span className="flex items-center gap-1">
                 🍃{" "}
                 <a
