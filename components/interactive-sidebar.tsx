@@ -21,8 +21,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import type { Site as SiteType } from "./map/types" // Import Site type
-import { sitesData } from "@/components/map/integrated-map"
+import type { Site as SiteType } from "./map/types"
+// REMOVE: import { sitesData } from "@/components/map/integrated-map" // Problematic import removed
 
 interface NavItemProps {
   icon: React.ReactNode
@@ -62,7 +62,7 @@ const NavItem: React.FC<NavItemProps> = ({
         <span className="font-['Montserrat'] font-medium">{label}</span>
       </div>
       <div className="flex items-center gap-2">
-        {count && <span className={`nav-item-count ${isActive ? "bg-white/20 text-white" : ""}`}>{count}</span>}
+        {count != null && <span className={`nav-item-count ${isActive ? "bg-white/20 text-white" : ""}`}>{count}</span>}
         {hasDropdown && (
           <div className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}>
             <ChevronDown className={`h-4 w-4 ${isActive ? "text-white" : ""}`} />
@@ -76,7 +76,6 @@ const NavItem: React.FC<NavItemProps> = ({
   )
 }
 
-// Updated SiteCardProps to use the imported SiteType which has slug
 interface SiteCardProps {
   site: SiteType
   onSiteClick: (siteSlug: string) => void
@@ -84,15 +83,17 @@ interface SiteCardProps {
 
 const SiteCard: React.FC<SiteCardProps> = ({ site, onSiteClick }) => {
   return (
-    // Use site.slug for clicking
     <div className="site-card" onClick={() => onSiteClick(site.slug)}>
       <div className="flex-1">
         <h3 className="site-card-title">{site.name}</h3>
         {site.blurb && <p className="site-card-description">{site.blurb}</p>}
       </div>
       <div className="relative">
-        <img src={site.cover_image || "/placeholder.svg"} alt={site.name} className="site-card-image" />
-        {/* Assuming media array exists and imageCount can be derived or is a direct prop */}
+        <img
+          src={site.cover_image || "/placeholder.svg?width=100&height=80&query=ancient+site"}
+          alt={site.name}
+          className="site-card-image"
+        />
         {site.media && site.media.length > 1 && (
           <div className="absolute top-1 right-1 theme-accent text-[var(--custom-button-text)] text-xs px-1.5 py-0.5 rounded font-['Montserrat']">
             {site.media.length}
@@ -108,9 +109,10 @@ interface InteractiveSidebarProps {
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   activeCategory: string
   onCategoryChange: (category: string) => void
-  totalSites: number // This will be based on the new sitesData length
-  filteredSites: number // This will be based on filtered new sitesData length
-  sitesForCategoryView: SiteType[] // Pass the sites to display in category view
+  totalSites: number
+  filteredSites: number
+  sitesForCategoryView: SiteType[]
+  allSites: SiteType[] // Added prop for all sites data
 }
 
 const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
@@ -121,6 +123,7 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
   totalSites,
   filteredSites,
   sitesForCategoryView,
+  allSites, // Use this prop
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isUpperExpanded, setIsUpperExpanded] = useState(false)
@@ -131,84 +134,62 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
   const [isLoadingSites, setIsLoadingSites] = useState(false)
   const router = useRouter()
 
-  const navigationItems = [
+  const baseNavigationItems = [
     {
       id: "all",
       label: "All Sites",
       icon: <Globe className="h-5 w-5" />,
-      count: totalSites, // This should reflect the total from sitesData
       hasDropdown: true,
     },
-    {
-      id: "ancient_ruins", // ID should match category values in site data
-      label: "Ancient Ruins",
-      icon: <Pyramid className="h-5 w-5" />,
-      // Counts should be dynamically calculated based on sitesData
-    },
-    {
-      id: "rock_art",
-      label: "Rock Art",
-      icon: <PaintBucket className="h-5 w-5" />,
-      count: 0, // Placeholder for dynamic calculation
-    },
-    {
-      id: "megaliths",
-      label: "Megaliths",
-      icon: <Landmark className="h-5 w-5" />,
-      count: 0, // Placeholder for dynamic calculation
-    },
-    {
-      id: "geoglyphs",
-      label: "Geoglyphs",
-      icon: <MapIcon className="h-5 w-5" />,
-      count: 0, // Placeholder for dynamic calculation
-    },
-    {
-      id: "unusual_formations",
-      label: "Unusual Formations",
-      icon: <Mountain className="h-5 w-5" />,
-      count: 0, // Placeholder for dynamic calculation
-    },
+    { id: "ancient_ruins", label: "Ancient Ruins", icon: <Pyramid className="h-5 w-5" /> },
+    { id: "rock_art", label: "Rock Art", icon: <PaintBucket className="h-5 w-5" /> },
+    { id: "megaliths", label: "Megaliths", icon: <Landmark className="h-5 w-5" /> },
+    { id: "geoglyphs", label: "Geoglyphs", icon: <MapIcon className="h-5 w-5" /> },
+    { id: "unusual_formations", label: "Unusual Formations", icon: <Mountain className="h-5 w-5" /> },
   ]
 
-  // Calculate counts dynamically after sitesData is available
-  navigationItems.forEach((item) => {
-    if (item.id !== "all") {
-      item.count = sitesData.filter((site: SiteType) => site.categories.includes(item.id)).length
+  const navigationItems = baseNavigationItems.map((item) => {
+    if (item.id === "all") {
+      return { ...item, count: totalSites }
     }
+    // Ensure allSites is an array before filtering
+    const categoryCount = Array.isArray(allSites)
+      ? allSites.filter((site) => site.categories && site.categories.includes(item.id)).length
+      : 0
+    return { ...item, count: categoryCount }
   })
 
-  // Update local category sites when activeCategory or sitesForCategoryView changes
   useEffect(() => {
     if (activeCategory !== "all" && showingSites) {
-      // If sitesForCategoryView is empty or not provided, filter sites locally
       if (!sitesForCategoryView || sitesForCategoryView.length === 0) {
-        const filtered = sitesData.filter((site) => site.categories.includes(activeCategory))
+        // Ensure allSites is an array before filtering
+        const filtered = Array.isArray(allSites)
+          ? allSites.filter((site) => site.categories && site.categories.includes(activeCategory))
+          : []
         setLocalCategorySites(filtered)
       } else {
         setLocalCategorySites(sitesForCategoryView)
       }
     }
-  }, [activeCategory, sitesForCategoryView, showingSites])
+  }, [activeCategory, sitesForCategoryView, showingSites, allSites])
 
   const fetchCategorySites = async (category: string) => {
     if (category === "all") {
-      onCategoryChange("all") // Ensure parent knows "all" is selected
-      setShowingSites(false) // Go back to navigation view for "all"
+      onCategoryChange("all")
+      setShowingSites(false)
       return
     }
 
     setIsLoadingSites(true)
     try {
-      // Simulate API call if needed, or directly filter
-      await new Promise((resolve) => setTimeout(resolve, 100)) // Short delay
-
-      // Filter sites locally as a fallback
-      const filtered = sitesData.filter((site) => site.categories.includes(category))
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      // Ensure allSites is an array before filtering
+      const filtered = Array.isArray(allSites)
+        ? allSites.filter((site) => site.categories && site.categories.includes(category))
+        : []
       setLocalCategorySites(filtered)
-
-      onCategoryChange(category) // Inform parent of category change
-      setShowingSites(true) // Show site cards view
+      onCategoryChange(category)
+      setShowingSites(true)
     } catch (err) {
       console.error("Error:", err)
       toast.error("An error occurred while loading sites")
@@ -223,7 +204,7 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
 
   const handleBackToNavigation = () => {
     setShowingSites(false)
-    onCategoryChange("all") // Reset to all sites view in parent
+    onCategoryChange("all")
   }
 
   const handleSiteClick = (siteSlug: string) => {
@@ -236,33 +217,15 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
       text: "Explore ancient sites around the world with this interactive map!",
       url: window.location.href,
     }
-
-    // Check if Web Share API is supported and available
     if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
       try {
         await navigator.share(shareData)
-        // Success - no toast needed as browser provides feedback
       } catch (error) {
         console.error("Web Share API failed:", error)
-        // Handle specific error types
-        if (error instanceof DOMException) {
-          if (error.name === "AbortError") {
-            // User cancelled the share operation, no action needed
-            return
-          } else if (error.name === "NotAllowedError") {
-            // Permission denied, fall back to clipboard
-            fallbackToClipboard(shareData.url)
-          } else {
-            // Other DOMException errors
-            fallbackToClipboard(shareData.url)
-          }
-        } else {
-          // Non-DOMException errors
-          fallbackToClipboard(shareData.url)
-        }
+        if (error instanceof DOMException && error.name === "AbortError") return
+        fallbackToClipboard(shareData.url)
       }
     } else {
-      // Web Share API not supported or data not shareable
       fallbackToClipboard(shareData.url)
     }
   }
@@ -277,7 +240,6 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
     }
   }
 
-  // Use local category sites if available, otherwise fall back to sitesForCategoryView
   const currentCategorySites = showingSites
     ? localCategorySites.length > 0
       ? localCategorySites
@@ -411,19 +373,23 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
                       </Button>
                     </div>
                     <div className="divide-y divide-[#CDAF87]/20 dark:divide-[#3A3A3A]">
-                      <NavItem
-                        icon={navigationItems[0].icon}
-                        label={navigationItems[0].label}
-                        count={navigationItems[0].count}
-                        isActive={activeCategory === navigationItems[0].id}
-                        hasDropdown={true}
-                        isDropdownOpen={isCategoriesOpen}
-                        onDropdownToggle={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                        onClick={() => handleCategoryClick(navigationItems[0].id)}
-                      />
+                      {navigationItems.map((item, index) => (
+                        <NavItem
+                          key={item.id}
+                          icon={item.icon}
+                          label={item.label}
+                          count={item.count}
+                          isActive={activeCategory === item.id}
+                          hasDropdown={item.hasDropdown}
+                          isDropdownOpen={index === 0 ? isCategoriesOpen : undefined} // Only first item has dropdown state
+                          onDropdownToggle={index === 0 ? () => setIsCategoriesOpen(!isCategoriesOpen) : undefined}
+                          onClick={() => handleCategoryClick(item.id)}
+                        />
+                      ))}
                       {isCategoriesOpen &&
                         navigationItems
-                          .slice(1)
+                          .slice(1) // Assuming "All Sites" is the first item and categories follow
+                          .filter((item) => !item.hasDropdown) // Filter out items that are themselves dropdowns if any
                           .map((item) => (
                             <NavItem
                               key={item.id}
@@ -453,29 +419,31 @@ const InteractiveSidebar: React.FC<InteractiveSidebarProps> = ({
               {!isBottomExpanded && (
                 <div className="flex-1 overflow-y-auto">
                   <div className="divide-y divide-[#CDAF87]/20 dark:divide-[#3A3A3A]">
-                    <NavItem
-                      icon={navigationItems[0].icon}
-                      label={navigationItems[0].label}
-                      count={navigationItems[0].count}
-                      isActive={activeCategory === navigationItems[0].id}
-                      hasDropdown={true}
-                      isDropdownOpen={isCategoriesOpen}
-                      onDropdownToggle={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                      onClick={() => handleCategoryClick(navigationItems[0].id)}
-                    />
-                    {isCategoriesOpen &&
-                      navigationItems
-                        .slice(1)
-                        .map((item) => (
-                          <NavItem
-                            key={item.id}
-                            icon={item.icon}
-                            label={item.label}
-                            count={item.count}
-                            isActive={activeCategory === item.id}
-                            onClick={() => handleCategoryClick(item.id)}
-                          />
-                        ))}
+                    {navigationItems.map((item, index) =>
+                      // Render the main "All Sites" item, then conditionally render sub-items if isCategoriesOpen
+                      index === 0 ? ( // "All Sites" item
+                        <NavItem
+                          key={item.id}
+                          icon={item.icon}
+                          label={item.label}
+                          count={item.count}
+                          isActive={activeCategory === item.id}
+                          hasDropdown={item.hasDropdown}
+                          isDropdownOpen={isCategoriesOpen}
+                          onDropdownToggle={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                          onClick={() => handleCategoryClick(item.id)}
+                        />
+                      ) : isCategoriesOpen ? ( // Category sub-items, only if "All Sites" is open
+                        <NavItem
+                          key={item.id}
+                          icon={item.icon}
+                          label={item.label}
+                          count={item.count}
+                          isActive={activeCategory === item.id}
+                          onClick={() => handleCategoryClick(item.id)}
+                        />
+                      ) : null,
+                    )}
                   </div>
                 </div>
               )}

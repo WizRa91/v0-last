@@ -3,19 +3,16 @@
 import type React from "react"
 import { useState } from "react"
 import dynamic from "next/dynamic"
-import InteractiveSidebar from "../interactive-sidebar" // Assuming this path is correct
+import InteractiveSidebar from "../interactive-sidebar"
 import { Home } from "lucide-react"
 import Link from "next/link"
 import type { Site } from "./types"
 
-// Dynamic import for the map component (no SSR)
-// Using the explicit alias @/ to ensure correct resolution
 const IntegratedMapWithNoSSR = dynamic(() => import("@/components/map/integrated-map"), {
   ssr: false,
   loading: () => <MapSkeleton />,
 })
 
-// Skeleton loader for the map
 function MapSkeleton() {
   return (
     <div className="flex items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-800">
@@ -48,17 +45,17 @@ export default function MapContainer({ sites }: MapContainerProps) {
     setSelectedSite(site)
   }
 
-  const filteredSites = Array.isArray(sites)
-    ? sites.filter((site) => {
-        const searchMatch =
-          searchText === "" ||
-          site.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-          site.country?.toLowerCase().includes(searchText.toLowerCase()) ||
-          site.blurb?.toLowerCase().includes(searchText.toLowerCase())
-        const categoryMatch = activeCategory === "all" || (site.categories && site.categories.includes(activeCategory))
-        return searchMatch && categoryMatch
-      })
-    : []
+  const currentSitesArray = Array.isArray(sites) ? sites : []
+
+  const filteredSitesForDisplay = currentSitesArray.filter((site) => {
+    const searchMatch =
+      searchText === "" ||
+      site.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+      site.country?.toLowerCase().includes(searchText.toLowerCase()) ||
+      site.blurb?.toLowerCase().includes(searchText.toLowerCase())
+    const categoryMatch = activeCategory === "all" || (site.categories && site.categories.includes(activeCategory))
+    return searchMatch && categoryMatch
+  })
 
   return (
     <div className="main-container">
@@ -68,8 +65,10 @@ export default function MapContainer({ sites }: MapContainerProps) {
           onSearchChange={handleSearchChange}
           activeCategory={activeCategory}
           onCategoryChange={handleCategoryChange}
-          totalSites={Array.isArray(sites) ? sites.length : 0}
-          filteredSites={filteredSites.length}
+          totalSites={currentSitesArray.length}
+          filteredSites={filteredSitesForDisplay.length}
+          sitesForCategoryView={activeCategory === "all" ? [] : filteredSitesForDisplay} // Pass filtered sites for category view
+          allSites={currentSitesArray} // Pass all sites for category counts and internal filtering
         />
       </div>
 
@@ -91,7 +90,7 @@ export default function MapContainer({ sites }: MapContainerProps) {
         <div className="map-content">
           <div className="map-wrapper">
             <IntegratedMapWithNoSSR
-              sites={sites} // Pass the original sites array
+              sites={currentSitesArray} // Pass the original sites array
               searchText={searchText}
               activeCategory={activeCategory}
               onSiteSelect={handleSiteSelect}
@@ -102,13 +101,13 @@ export default function MapContainer({ sites }: MapContainerProps) {
         <div className="map-footer">
           <div className="flex justify-between items-center">
             <div className="flex gap-4">
-              <span>Total sites: {Array.isArray(sites) ? sites.length : 0}</span>
-              <span>Filtered sites: {filteredSites.length}</span>
-              <span>Auth: Anonymous</span> {/* Placeholder */}
+              <span>Total sites: {currentSitesArray.length}</span>
+              <span>Filtered sites: {filteredSitesForDisplay.length}</span>
+              <span>Auth: Anonymous</span>
             </div>
             <div className="flex gap-4">
-              <span>Data source: Database</span> {/* Placeholder */}
-              <span>Retries: 0</span> {/* Placeholder */}
+              <span>Data source: Database</span>
+              <span>Retries: 0</span>
               <span className="flex items-center gap-1">
                 🍃{" "}
                 <a
