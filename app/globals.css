@@ -80,26 +80,6 @@
   }
 }
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  --custom-border: #cdaf87;
-  --custom-button-text: #ffffff;
-  --custom-hover: rgba(255, 255, 255, 0.2);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-    --custom-border: #3a3a3a;
-    --custom-button-text: #ffffff;
-    --custom-hover: rgba(255, 255, 255, 0.1);
-  }
-}
-
 @layer base {
   * {
     @apply border-border;
@@ -109,7 +89,6 @@
     font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
       Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     transition: background-color 0.3s ease, color 0.3s ease;
-    color: rgb(var(--foreground-rgb));
   }
 
   h1,
@@ -229,80 +208,6 @@
 
 .dark .theme-card:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Sidebar Styles */
-.sidebar {
-  @apply h-full w-full flex flex-col bg-[#4A7A7A] dark:bg-[#1F1F1F] text-white overflow-hidden;
-}
-
-.sidebar-header {
-  @apply flex items-center gap-2 p-3 border-b border-[#CDAF87]/30 dark:border-[#3A3A3A];
-}
-
-.search-input {
-  @apply h-9 pl-9 pr-3 bg-white/10 border-none rounded-md focus-visible:ring-1 focus-visible:ring-white/30 placeholder:text-white/50;
-}
-
-.nav-item {
-  @apply flex items-center justify-between p-3 cursor-pointer hover:bg-white/10 transition-colors;
-}
-
-.nav-item.active {
-  @apply bg-[#CDAF87] dark:bg-[#3A3A3A] text-white;
-}
-
-.nav-item-icon {
-  @apply text-[#CDAF87] dark:text-[#CDAF87];
-}
-
-.nav-item-count {
-  @apply bg-[#CDAF87]/20 dark:bg-[#3A3A3A]/50 text-[#CDAF87] dark:text-[#CDAF87] text-xs px-1.5 py-0.5 rounded font-['Montserrat'];
-}
-
-.site-card {
-  @apply flex items-center gap-3 p-3 border-b border-[#CDAF87]/30 dark:border-[#3A3A3A] cursor-pointer hover:bg-white/5 transition-colors;
-}
-
-.site-card-title {
-  @apply font-['Cinzel'] font-semibold text-white mb-1;
-}
-
-.site-card-description {
-  @apply text-xs text-white/70 line-clamp-2;
-}
-
-.site-card-image {
-  @apply w-16 h-16 object-cover rounded-md;
-}
-
-.collapse-button {
-  @apply fixed top-1/2 -translate-y-1/2 left-[320px] z-50 bg-[#4A7A7A] dark:bg-[#1F1F1F] text-white hover:bg-[#3A6A6A] dark:hover:bg-[#2A2A2A] transition-all;
-}
-
-.loading-container {
-  @apply flex flex-col items-center justify-center p-8;
-}
-
-.loading-spinner {
-  @apply w-8 h-8 border-4 border-t-[#CDAF87] rounded-full animate-spin mb-4;
-}
-
-.loading-text {
-  @apply text-white/70;
-}
-
-/* Sidebar Widget Styles - Updated with beige/cream background */
-.sidebar-widget {
-  @apply rounded-lg overflow-hidden mb-6 bg-[#CDAF87]/20 dark:bg-[#3A3A3A]/20 border border-[#CDAF87]/30 dark:border-[#3A3A3A];
-}
-
-.sidebar-widget-header {
-  @apply p-4 border-b border-[#CDAF87]/30 dark:border-[#3A3A3A];
-}
-
-.sidebar-widget-content {
-  @apply p-4;
 }
 
 /* Line clamp utilities */
@@ -920,26 +825,7 @@ button {
   }
 }
 
-/* Map Popup Styles */
-.site-popup {
-  @apply flex flex-col gap-2 min-w-[250px];
-}
-
-.site-popup img {
-  @apply w-full h-32 object-cover rounded-md mb-1;
-}
-
-.site-popup h3 {
-  @apply font-['Cinzel'] font-semibold text-base;
-}
-
-.site-popup p {
-  @apply text-sm text-gray-600 dark:text-gray-300;
-}
-
-.site-popup button {
-  @apply mt-2 px-3 py-1.5 bg-[#4A7A7A] text-white text-sm rounded hover:bg-[#3A6A6A] transition-colors;
-}
+/* Add all the new styling classes from the document at the end of the file */
 
 /* ========== Sites Page Comprehensive Styling ========== */
 
