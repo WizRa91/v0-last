@@ -10,7 +10,7 @@ import type { Site } from "./types"
 
 // Dynamic import for the map component (no SSR)
 // Using the explicit alias @/ to ensure correct resolution
-const IntegratedMapWithNoSSR = dynamic(() => import("@/components/map/integrated-map-supabase"), {
+const IntegratedMapWithNoSSR = dynamic(() => import("@/components/map/integrated-map"), {
   ssr: false,
   loading: () => <MapSkeleton />,
 })
